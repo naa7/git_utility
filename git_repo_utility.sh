@@ -30,7 +30,7 @@ do
 		#if ! (dpkg -s zenity >/dev/null 2>&1) && ! (rpm -q zenity >/dev/null 2>&1) && ! (yum list installed zenity >/dev/null 2>&1) && ! (dnf list installed zenity >/dev/null 2>&1) && ! (which zenity >/dev/null 2>&1) ;
 		#then
 		echo "----------------------------------------------"
-		echo -n "Do you want to add all or specific file?(A/s/[R]eturn): " 
+		echo -n "Do you want to add [A]ll or [s]pecific file?(A/s/[R]eturn): " 
 		read fileOption
 
 		if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' && $comment != 'r' ]]
@@ -49,7 +49,21 @@ do
 				git add $fileName >/dev/null 2>&1
 
 			else
-				clear && echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m" && sleep 1.5 && clear && continue
+				clear && echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m" && sleep 1.5 && clear
+
+				git status -s -b -unormal
+
+				echo -n "Enter name of file: "
+				read fileName
+			
+				if [ -f $fileName ]
+				then
+					#adding a file
+					git add $fileName >/dev/null 2>&1
+
+				else
+					clear && echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m" && sleep 1.5 && clear && continue
+				fi
 			fi
 
 		else
