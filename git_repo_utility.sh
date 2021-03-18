@@ -132,7 +132,7 @@ do
 
 	elif [[ $input == 7 ]]
 	then
-		if (git log)
+		if (git log --color | less -R)
 		then
 			clear
 		else
@@ -142,7 +142,7 @@ do
 	
 	elif [[ $input == 8 ]]
 	then
-		if (git log -p)
+		if (git log -p --color | less -R)
 		then
 			clear
 		fi
