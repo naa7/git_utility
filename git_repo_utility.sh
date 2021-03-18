@@ -89,7 +89,7 @@ do
 			# pushing to repository
 			if (git push)
 			then
-				git status -s -b -unormal && sleep 1.5 && echo -ne "\033[A\033[2K\r"
+				git status -s -b -unormal && sleep 1.5 && clear
 				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 				sleep 1.5 && clear
 
