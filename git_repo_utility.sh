@@ -16,10 +16,12 @@ do
 	echo "---------------------------------------------------------"
 	echo "Enter Option Nubmer: "
 	echo "========================================================="
-	echo -ne "\033[2A\033[K\rEnter Option Number: "
-	read input && echo ""
+	echo "                    Enter [q] to Exit                    "
+	echo "========================================================="
+	echo -ne "\033[4A\033[K\rEnter Option Number: "
+	read input && echo -e "\n\n\n"
 
-	for i in {1..13}
+	for i in {1..16}
 	do	
 		echo -ne "\033[A\033[K\r"
 	done
