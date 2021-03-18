@@ -68,7 +68,8 @@ do
 
 			# commiting changes
 			git commit -m "$comment" >/dev/null 2>&1
-
+			clear
+			
 			# pushing to repository
 			if (git push >/dev/null 2>&1) ;
 			then
