@@ -30,16 +30,15 @@ do
 		#if ! (dpkg -s zenity >/dev/null 2>&1) && ! (rpm -q zenity >/dev/null 2>&1) && ! (yum list installed zenity >/dev/null 2>&1) && ! (dnf list installed zenity >/dev/null 2>&1) && ! (which zenity >/dev/null 2>&1) ;
 		#then
 		echo "----------------------------------------------"
-		echo -n "Enter a comment to commit changes or [R]eturn: "
-		read comment
-		echo -ne "\033[A\033[KDo you want to add all or specific file?(A,s): " 
+		echo -n "Do you want to add all or specific file?(A/s/[R]eturn): " 
 		read fileOption
 
-		if [[ $fileOption == 'A' || $fileOption == 'a' ]]
+		if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' && $comment != 'r' ]]
 		then
 			# adding files
 			git add . >/dev/null 2>&1
-		elif [[ $fileOption == 'S' || $fileOption == 's' ]]
+
+		elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' && $comment != 'r' ]]
 		then
 			echo -ne "\033[A\033[KEnter name of file: "
 			read fileName
@@ -50,12 +49,15 @@ do
 				git add $fileName >/dev/null 2>&1
 
 			else
-				echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m"
+				clear && echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m" && sleep 1.5 && clear && continue
 			fi
 
 		else
-			echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m" && sleep 1.5 && echo -ne "\033[A\033[2K\r"	
+			clear && continue
 		fi
+
+		echo -ne "\033[A\033[KEnter a comment to commit changes or [R]eturn: "
+		read comment
 
 		if [[ $comment != 'R' && $comment != 'r' ]]
 		then
