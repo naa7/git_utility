@@ -87,7 +87,7 @@ do
 			clear
 			
 			# pushing to repository
-			if (git push >/dev/null 2>&1) ;
+			if (git push)
 			then
 				git status -s -b -unormal && sleep 1.5 && echo -ne "\033[A\033[2K\r"
 				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
