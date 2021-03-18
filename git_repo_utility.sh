@@ -32,7 +32,30 @@ do
 		echo "----------------------------------------------"
 		echo -n "Enter a comment to commit changes or [R]eturn: "
 		read comment
-		clear
+		echo -ne "\033[A\033[KDo you want to add all or specific file?(A,s): " 
+		read fileOption
+
+		if [[ $fileOption == 'A' || $fileOption == 'a' ]]
+		then
+			# adding files
+			git add . >/dev/null 2>&1
+		elif [[ $fileOption == 'S' || $fileOption == 's' ]]
+		then
+			echo -ne "\033[A\033[KEnter name of file: "
+			read fileName
+			
+			if [ -f $fileName ]
+			then
+				#adding a file
+				git add $fileName >/dev/null 2>&1
+
+			else
+				echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m"
+			fi
+
+		else
+			echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m" && sleep 1.5 && echo -ne "\033[A\033[2K\r"	
+		fi
 
 		if [[ $comment != 'R' && $comment != 'r' ]]
 		then
@@ -40,9 +63,6 @@ do
 			#else
 			#	comment='$(zenity --title="Git Repository" --entry --text="Enter a comment to commit changes:")'
 			#fi
-
-			# adding files
-			git add . >/dev/null 2>&1
 
 			# commiting changes
 			git commit -m "$comment" >/dev/null 2>&1
