@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 while [[ true ]]
 do
 
@@ -14,11 +15,11 @@ do
 	echo -e "| \033[33;1;82m[7] Simple log      [8] Detailed log\033[0m                   |"
 	echo -e "| \033[33;1;82m[9] Restore file    [10] Quit\033[0m                          |"
 	echo "+--------------------------------------------------------+"
-	echo -e "| \033[36;1;82mEnter Option Nubmer:\033[0m                                   |"
+	echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                          |"
 	echo "+========================================================+"
 	echo -e "|                   \033[31;1;82mEnter [q] to Exit\033[0m                    |"
 	echo "+========================================================+"
-	echo -ne "\033[4A\r| \033[36;1;82mEnter Option Number:\033[0m "
+	echo -ne "\033[4A\r| \033[36;1;82mEnter Number:\033[0m "
 	read input && echo -e "\n\n\n"
 
 	for i in {1..16}
@@ -217,10 +218,10 @@ do
 
 	elif [[ $input == 10 || $input == 'Q' || $input == 'q' ]]
 	then
-		echo -e "\033[30;48;5;82m--- Program Exit ---\033[0m" && sleep 1.5 && echo -ne "\033[A\033[2K\r" && break
+		echo -e "\033[30;42;5;82m--- Good Bye ---\033[0m" && sleep 1.5 && clear && break
 
 	else
-		echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m"&& sleep 1.5 && echo -ne "\033[A\033[2K\r"	
+		echo -e "\033[30;41;2;82m--- Error, Wrong Entry ---\033[0m"&& sleep 1 && echo -ne "\033[A\033[2K\r"	
 	fi
 done
 
