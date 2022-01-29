@@ -99,7 +99,7 @@ do
 				sleep 1.5 && clear
 			fi
 		else
-			continue
+			clear && continue
 		fi
 
 	elif [[ $input == 2 ]]
