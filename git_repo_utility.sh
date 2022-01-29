@@ -33,7 +33,7 @@ do
 		#if ! (dpkg -s zenity >/dev/null 2>&1) && ! (rpm -q zenity >/dev/null 2>&1) && ! (yum list installed zenity >/dev/null 2>&1) && ! (dnf list installed zenity >/dev/null 2>&1) && ! (which zenity >/dev/null 2>&1) ;
 		#then
 		echo "----------------------------------------------"
-		echo -n "Do you want to add [A]ll or [s]pecific file?(A/s/[R]eturn): " 
+		echo -n "Add [A]ll or [s]pecific file (A/s/[R]eturn): " 
 		read fileOption
 
 		if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' && $comment != 'r' ]]
