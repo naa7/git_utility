@@ -142,7 +142,8 @@ do
 			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
 			if (git pull --no-edit >/dev/null 2>&1)
 			then
-				clear
+				clear #c;ear
+				# I am here
 				git status -s -b -unormal && sleep 1.5 && clear
 				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 				sleep 1 && clear && break
