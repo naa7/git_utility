@@ -249,6 +249,7 @@ do
 		while [[ true ]]
 		do
 			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+
 			# git pull is basically git fetch && git merge
 			# git stash pop = git stash apply + git stash drop
 			#git stash pop // if git stash pop doesn't work, then git stash apply + git stash drop work the same way
