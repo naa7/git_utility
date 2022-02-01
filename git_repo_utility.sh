@@ -221,11 +221,11 @@ do
 		echo "+--------------------------------------------------------+"
 		git status -s -b -unormal
 		echo "+========================================================+"
-		echo -e "| \033[36;1;82mEnter comment to commit changes:\033[0m                       |"
+		echo -e "| \033[36;1;82mEnter comment to commit:\033[0m                               |"
 		echo "+========================================================+"
 		echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 		echo "+========================================================+"
-		echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
+		echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit: \033[0m"
 		read comment && clear
 
 		if [[ $comment != 'R' && $comment != 'r' ]]
@@ -233,11 +233,7 @@ do
 
 			# commiting changes
 			git commit -m "$comment" >/dev/null 2>&1
-			clear
-			git status -s -b -unormal && sleep 1.5 && clear
-			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1 && clear
-			
+
 			# pushing to repository
 			if (git push)
 			then
