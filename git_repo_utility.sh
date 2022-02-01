@@ -122,6 +122,7 @@ do
 			continue
 		fi
 
+
 	# Undo last commit
 	elif [[ $input == 2 ]]
 	then
@@ -138,6 +139,7 @@ do
 			sleep 1 && clear
 		fi
 	
+
 	# Push only	
 	elif [[ $input == 3 ]]
 	then
@@ -151,6 +153,7 @@ do
 			git restore --staged .
 			sleep 1 && clear
 		fi			
+
 
 	# Commit & push changes
 	elif [[ $input == 4 ]]
@@ -256,6 +259,7 @@ do
 			continue
 		fi
 
+
 	# Pull changes	
 	elif [[ $input == 5 ]]
 	then
@@ -275,6 +279,7 @@ do
 				sleep 1 && clear && break
 			fi
 		done
+
 
 	# Pull w/o affecting local files
 	elif [[ $input == 6 ]]
@@ -299,6 +304,7 @@ do
 			fi
 		done
 
+
 	# Files Status
 	elif [[ $input == 7 ]]
 	then
@@ -309,6 +315,7 @@ do
 			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 			sleep 1 && clear
 		fi
+
 
 	# Create new repository
 	elif [[ $input == 8 ]]
@@ -531,6 +538,7 @@ do
 				sleep 1.5 && clear && continue	
 			fi
 
+
 	# Simple log
 	elif [[ $input == 9 ]]
 	then
@@ -541,6 +549,7 @@ do
 			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 			sleep 1 && clear
 		fi
+
 
 	# Delete repository
 	elif [[ $input == 10 ]]
@@ -603,7 +612,6 @@ do
 		fi
 
 
-
 	# Detailed log
 	elif [[ $input == 11 ]]
 	then
@@ -611,6 +619,7 @@ do
 		then
 			clear
 		fi
+
 
 	# Remove all local changes
 	elif [[ $input == 12 ]]
@@ -630,6 +639,7 @@ do
 				sleep 1 && clear && break
 			fi
 		done
+
 
 	#Restore file
 	elif [[ $input == 13 ]]
@@ -664,6 +674,7 @@ do
 			clear && continue
 		fi
 
+
 	# Show changes since last commit
 	elif [[ $input == 14 ]]
 	then
@@ -680,6 +691,7 @@ do
 			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 			sleep 1 && clear
 		fi
+
 
 	# Quit
 	elif [[ $input == 'Q' || $input == 'q' ]]
