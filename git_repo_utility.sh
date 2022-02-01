@@ -14,7 +14,7 @@ do
 	echo -e "|  \033[33;1;82m[5] Files status    [6] Show changes since last commit\033[0m |"
 	echo -e "|  \033[33;1;82m[7] Simple log      [8] Create new repository\033[0m          |"
 	echo -e "|  \033[33;1;82m[9] Detailed log   [10] Delete repository\033[0m              |"
-	echo -e "| \033[33;1;82m[11] Restore file\033[0m                                       |"
+	echo -e "| \033[33;1;82m[11] Restore file\033[0m   [0] Commit Changes                  |"
 	echo "+---------------------------------------------------------+"
 	echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                           |"
 	echo "+=========================================================+"
@@ -27,7 +27,95 @@ do
 	#do	
 		#echo -ne "\033[A\033[K\r"
 	#done
-	if [[ $input == 1 ]]
+
+	if [[ $input == 0 ]]
+	then
+		git status -s -b -unormal
+
+		echo "----------------------------------------------"
+		echo -n "Add [A]ll or [s]pecific file (A/s/[R]eturn): " 
+		read fileOption
+
+		if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
+		then
+			# adding files
+			git add . >/dev/null 2>&1
+
+		elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' || $comment != 'r' ]]
+		then
+			echo -ne "\033[A\033[KEnter name of file: "
+			read fileName
+			
+			if [ -f $fileName ]
+			then
+				#adding a file
+				git add $fileName >/dev/null 2>&1
+
+			else
+				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
+
+				git status -s -b -unormal
+				echo "----------------------------------------------"
+				echo -n "Enter name of file: "
+				read fileName
+			
+				if [ -f $fileName ]
+				then
+					#adding a file
+					git add $fileName >/dev/null 2>&1
+
+				else
+					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue
+				fi
+			fi
+
+		elif [[ $fileOption == 'R' || $fileOption == 'r' ]] && [[ $comment == 'R' || $comment == 'r' ]]
+		then
+			clear && continue		
+		else
+			clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue		
+		fi
+		
+		clear
+		git status -s -b -unormal
+		echo "----------------------------------------------"
+		echo -n "Enter comment to commit changes | [R]eturn: "
+		read comment
+
+		if [[ $comment != 'R' && $comment != 'r' ]]
+		then
+
+			#else
+			#	comment='$(zenity --title="Git Repository" --entry --text="Enter a comment to commit changes:")'
+			#fi
+
+			# commiting changes
+			git commit -m "$comment" >/dev/null 2>&1
+			clear
+			
+			# pushing to repository
+			if (git push)
+			then
+				git status -s -b -unormal && sleep 1.5 && clear
+				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				sleep 1 && clear
+
+			else
+				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				git restore --staged .
+				sleep 1 && clear
+			fi
+		else
+			if (git reset .) || (git restore --staged .) ;
+			then
+				clear
+			else
+				echo "\033[30;41;2;82m--- Error! ---\033[0m" && sleep 1 && clear		
+			fi
+			continue
+		fi
+
+	elif [[ $input == 1 ]]
 	then
 		git status -s -b -unormal
 		#if ! (dpkg -s zenity >/dev/null 2>&1) && ! (rpm -q zenity >/dev/null 2>&1) && ! (yum list installed zenity >/dev/null 2>&1) && ! (dnf list installed zenity >/dev/null 2>&1) && ! (which zenity >/dev/null 2>&1) ;
@@ -532,6 +620,7 @@ do
 	else
 		echo -e "\033[30;41;2;82m--- Error, Entry not recognized! ---\033[0m"&& sleep 1.5 && clear && continue	
 	fi
+	
 done
 
 
