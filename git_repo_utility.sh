@@ -251,7 +251,7 @@ do
 			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
 			# git pull is basically git fetch && git merge
 			#git stash apply // if git stash pop doesn't work, then git stash apply works the same way
-			if (git stash >/dev/null 2>&1) && (git pull >/dev/null 2>&1) && (git stash pop >/dev/null 2>&1) && (git stash drop >/dev/null 2>&1) ;
+			if (git stash -u >/dev/null 2>&1) && (git pull >/dev/null 2>&1) && (git stash apply >/dev/null 2>&1) && (git stash drop >/dev/null 2>&1) ;
 			then
 				clear
 				git status -s -b -unormal && sleep 1.5 && clear
