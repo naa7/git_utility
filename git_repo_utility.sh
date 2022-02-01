@@ -124,7 +124,7 @@ do
 			#git stash apply // if git stash pop doesn't work, then git stash apply works the same way
 			if (git stash >/dev/null 2>&1) && (git pull >/dev/null 2>&1) && (git stash pop >/dev/null 2>&1) && (git stash drop >/dev/null 2>&1) ;
 			then
-				clear
+				clear #clear
 				git status -s -b -unormal && sleep 1.5 && clear
 				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 				sleep 1 && clear && break
