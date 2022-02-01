@@ -32,11 +32,19 @@ do
 	# Commit only
 	if [[ $input == 1 ]]
 	then
+		echo "+========================================================+"
+		echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+		echo "+========================================================+"
 		git status -s -b -unormal
 
-		echo "----------------------------------------------"
-		echo -n "Add [A]ll or [s]pecific file (A/s/[R]eturn): " 
+		echo "+--------------------------------------------------------+"
+		echo -e "| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m                   |" 
+		echo "+========================================================+"
+		echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+		echo "+========================================================+"
+		echo -ne "\033[4A\r| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m"
 		read fileOption
+		clear
 
 		if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
 		then
@@ -45,7 +53,18 @@ do
 
 		elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' || $comment != 'r' ]]
 		then
-			echo -ne "\033[A\033[KEnter name of file: "
+			echo "+========================================================+"
+			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+			echo "+========================================================+"
+			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
+			echo "+--------------------------------------------------------+"
+			git status -s -b -unormal
+			echo "+========================================================+"
+			echo -e "| \033[36;1;82mEnter name of file:\033[0m                                    |"
+			echo "+========================================================+"
+			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+			echo "+========================================================+"
+			echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
 			read fileName
 			
 			if [ -f $fileName ]
@@ -53,25 +72,15 @@ do
 				#adding a file
 				git add $fileName >/dev/null 2>&1
 
+			elif [[ $fileName == 'R' || $fileName == 'r' ]]
+			then
+				clear && continue
+
 			else
-				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
-
-				git status -s -b -unormal
-				echo "----------------------------------------------"
-				echo -n "Enter name of file: "
-				read fileName
-			
-				if [ -f $fileName ]
-				then
-					#adding a file
-					git add $fileName >/dev/null 2>&1
-
-				else
-					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue
-				fi
+				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue
 			fi
 
-		elif [[ $fileOption == 'R' || $fileOption == 'r' ]] && [[ $comment == 'R' || $comment == 'r' ]]
+		elif [[ $fileOption == 'R' || $fileOption == 'r' ]]
 		then
 			clear && continue		
 		else
@@ -79,10 +88,19 @@ do
 		fi
 		
 		clear
+		echo "+========================================================+"
+		echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+		echo "+========================================================+"
+		echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
+		echo "+--------------------------------------------------------+"
 		git status -s -b -unormal
-		echo "----------------------------------------------"
-		echo -n "Enter comment to commit changes | [R]eturn: "
-		read comment
+		echo "+========================================================+"
+		echo -e "| \033[36;1;82mEnter comment to commit changes:\033[0m                       |"
+		echo "+========================================================+"
+		echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+		echo "+========================================================+"
+		echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
+		read comment && clear
 
 		if [[ $comment != 'R' && $comment != 'r' ]]
 		then
@@ -137,12 +155,22 @@ do
 	# Commit & push changes
 	elif [[ $input == 4 ]]
 	then
-		git status -s -b -unormal
 		#if ! (dpkg -s zenity >/dev/null 2>&1) && ! (rpm -q zenity >/dev/null 2>&1) && ! (yum list installed zenity >/dev/null 2>&1) && ! (dnf list installed zenity >/dev/null 2>&1) && ! (which zenity >/dev/null 2>&1) ;
 		#then
-		echo "----------------------------------------------"
-		echo -n "Add [A]ll or [s]pecific file (A/s/[R]eturn): " 
+
+		echo "+========================================================+"
+		echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+		echo "+========================================================+"
+		git status -s -b -unormal
+
+		echo "+--------------------------------------------------------+"
+		echo -e "| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m                   |" 
+		echo "+========================================================+"
+		echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+		echo "+========================================================+"
+		echo -ne "\033[4A\r| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m"
 		read fileOption
+		clear
 
 		if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
 		then
@@ -151,7 +179,18 @@ do
 
 		elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' || $comment != 'r' ]]
 		then
-			echo -ne "\033[A\033[KEnter name of file: "
+			echo "+========================================================+"
+			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+			echo "+========================================================+"
+			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
+			echo "+--------------------------------------------------------+"
+			git status -s -b -unormal
+			echo "+========================================================+"
+			echo -e "| \033[36;1;82mEnter name of file:\033[0m                                    |"
+			echo "+========================================================+"
+			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+			echo "+========================================================+"
+			echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
 			read fileName
 			
 			if [ -f $fileName ]
@@ -159,25 +198,15 @@ do
 				#adding a file
 				git add $fileName >/dev/null 2>&1
 
+			elif [[ $fileName == 'R' || $fileName == 'r' ]]
+			then
+				clear && continue
+
 			else
-				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
-
-				git status -s -b -unormal
-				echo "----------------------------------------------"
-				echo -n "Enter name of file: "
-				read fileName
-			
-				if [ -f $fileName ]
-				then
-					#adding a file
-					git add $fileName >/dev/null 2>&1
-
-				else
-					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue
-				fi
+				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue
 			fi
 
-		elif [[ $fileOption == 'R' || $fileOption == 'r' ]] && [[ $comment == 'R' || $comment == 'r' ]]
+		elif [[ $fileOption == 'R' || $fileOption == 'r' ]]
 		then
 			clear && continue		
 		else
@@ -185,21 +214,29 @@ do
 		fi
 		
 		clear
+		echo "+========================================================+"
+		echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+		echo "+========================================================+"
+		echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
+		echo "+--------------------------------------------------------+"
 		git status -s -b -unormal
-		echo "----------------------------------------------"
-		echo -n "Enter comment to commit changes | [R]eturn: "
-		read comment
+		echo "+========================================================+"
+		echo -e "| \033[36;1;82mEnter comment to commit changes:\033[0m                       |"
+		echo "+========================================================+"
+		echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+		echo "+========================================================+"
+		echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
+		read comment && clear
 
 		if [[ $comment != 'R' && $comment != 'r' ]]
 		then
 
-			#else
-			#	comment='$(zenity --title="Git Repository" --entry --text="Enter a comment to commit changes:")'
-			#fi
-
 			# commiting changes
 			git commit -m "$comment" >/dev/null 2>&1
 			clear
+			git status -s -b -unormal && sleep 1.5 && clear
+			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+			sleep 1 && clear
 			
 			# pushing to repository
 			if (git push)
