@@ -27,7 +27,6 @@ do
 	#do	
 		#echo -ne "\033[A\033[K\r"
 	#done
-
 	if [[ $input == 1 ]]
 	then
 		git status -s -b -unormal
@@ -37,12 +36,12 @@ do
 		echo -n "Add [A]ll or [s]pecific file (A/s/[R]eturn): " 
 		read fileOption
 
-		if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' && $comment != 'r' ]]
+		if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
 		then
 			# adding files
 			git add . >/dev/null 2>&1
 
-		elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' && $comment != 'r' ]]
+		elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' || $comment != 'r' ]]
 		then
 			echo -ne "\033[A\033[KEnter name of file: "
 			read fileName
@@ -70,11 +69,17 @@ do
 				fi
 			fi
 
+		elif [[ $fileOption == 'R' || $fileOption == 'r' ]] && [[ $comment == 'R' || $comment == 'r' ]]
+		then
+			clear && continue		
 		else
-			clear && continue
+			clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue		
 		fi
-
-		echo -ne "\033[A\033[KEnter a comment to commit changes or [R]eturn: "
+		
+		clear
+		git status -s -b -unormal
+		echo "----------------------------------------------"
+		echo -n "Enter comment to commit changes | [R]eturn: "
 		read comment
 
 		if [[ $comment != 'R' && $comment != 'r' ]]
@@ -93,14 +98,21 @@ do
 			then
 				git status -s -b -unormal && sleep 1.5 && clear
 				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				sleep 1.5 && clear
+				sleep 1 && clear
 
 			else
 				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				sleep 1.5 && clear
+				git restore --staged .
+				sleep 1 && clear
 			fi
 		else
-			clear && continue
+			if (git reset .) || (git restore --staged .) ;
+			then
+				clear
+			else
+				echo "\033[30;41;2;82m--- Error! ---\033[0m" && sleep 1 && clear		
+			fi
+			continue
 		fi
 
 	elif [[ $input == 2 ]]
@@ -109,41 +121,46 @@ do
 		#git stash apply // if git stash pop doesn't work, then git stash apply works the same way
 		if (git stash >/dev/null 2>&1) && (git pull >/dev/null 2>&1) && (git stash pop >/dev/null 2>&1) && (git stash drop >/dev/null 2>&1)
 		then
-			git status -s -b -unormal && sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			git status -s -b -unormal && sleep 1.5 && clear
 			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			sleep 1 && clear
 
 		else
 			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			sleep 1 && clear
 		fi
 
 	elif [[ $input == 3 ]]
 	then
 		if (git pull --no-edit >/dev/null 2>&1)
 		then
-			git status -s -b -unormal && sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			git status -s -b -unormal && sleep 1.5 && clear
 			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			sleep 1 && clear
 
 		else
 			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			sleep 1 && clear
 		fi
 
 	elif [[ $input == 4 ]]
 	then
-		if (git fetch >/dev/null 2>&1) && (git reset --hard HEAD >/dev/null 2>&1) && (git merge >/dev/null 2>&1)
-		then
-			git status -s -b -unormal && sleep 1.5 && echo -ne "\033[A\033[2K\r"
-			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
-			break
+		while [[ true ]]
+		do
+			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+			if (git fetch >/dev/null 2>&1) && (git reset --hard HEAD >/dev/null 2>&1) && (git merge >/dev/null 2>&1) ;
+			then
+				clear
+				git status -s -b -unormal && sleep 1.5 && clear
+				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				sleep 1 && clear && break
 
-		else
-			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
-		fi
+			else
+				clear
+				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				sleep 1 && clear && break
+			fi
+		done
 
 	elif [[ $input == 5 ]]
 	then
@@ -152,7 +169,7 @@ do
 			clear
 		else
 			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			sleep 1 && clear
 		fi
 
 	elif [[ $input == 6 ]]
@@ -168,7 +185,7 @@ do
 
 		else
 			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			sleep 1 && clear
 		fi
 
 	elif [[ $input == 7 ]]
@@ -178,7 +195,7 @@ do
 			clear
 		else
 			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1.5 && echo -ne "\033[A\033[2K\r"
+			sleep 1 && clear
 		fi
 
 	elif [[ $input == 8 ]]
@@ -489,11 +506,11 @@ do
 			if (git restore $name >/dev/null 2>&1)
 			then
 				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				sleep 1.5 && echo -ne "\033[A\033[2K\r"
+				sleep 1 && clear && continue
 				break
 			else
 				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				sleep 1.5 && echo -ne "\033[A\033[2K\r"
+				sleep 1 && clear && continue
 			fi
 		else
 			clear && continue
