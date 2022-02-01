@@ -233,11 +233,7 @@ do
 
 			# commiting changes
 			git commit -m "$comment" >/dev/null 2>&1
-			clear
-			git status -s -b -unormal && sleep 1.5 && clear
-			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1 && clear
-			
+
 			# pushing to repository
 			if (git push)
 			then
