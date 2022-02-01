@@ -652,8 +652,6 @@ do
 	else
 		echo -e "\033[30;41;2;82m--- Error, Entry not recognized! ---\033[0m"&& sleep 1.5 && clear && continue	
 	fi
-
-#I am here 
 	
 done
 
