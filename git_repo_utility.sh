@@ -117,31 +117,41 @@ do
 
 	elif [[ $input == 2 ]]
 	then
-		# git pull is basically git fetch && git merge
-		#git stash apply // if git stash pop doesn't work, then git stash apply works the same way
-		if (git stash >/dev/null 2>&1) && (git pull >/dev/null 2>&1) && (git stash pop >/dev/null 2>&1) && (git stash drop >/dev/null 2>&1)
-		then
-			git status -s -b -unormal && sleep 1.5 && clear
-			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1 && clear
+		while [[ true ]]
+		do
+			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+			# git pull is basically git fetch && git merge
+			#git stash apply // if git stash pop doesn't work, then git stash apply works the same way
+			if (git stash >/dev/null 2>&1) && (git pull >/dev/null 2>&1) && (git stash pop >/dev/null 2>&1) && (git stash drop >/dev/null 2>&1)
+			then
+				clear
+				git status -s -b -unormal && sleep 1.5 && clear
+				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				sleep 1 && clear && break
 
-		else
-			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1 && clear
-		fi
+			else
+				clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				sleep 1 && clear && break
+			fi
+		done
 
 	elif [[ $input == 3 ]]
 	then
-		if (git pull --no-edit >/dev/null 2>&1)
-		then
-			git status -s -b -unormal && sleep 1.5 && clear
-			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1 && clear
+		while [[ true ]]
+		do
+			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+			if (git pull --no-edit >/dev/null 2>&1)
+			then
+				clear
+				git status -s -b -unormal && sleep 1.5 && clear
+				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				sleep 1 && clear && break
 
-		else
-			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1 && clear
-		fi
+			else
+				clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				sleep 1 && clear && break
+			fi
+		done
 
 	elif [[ $input == 4 ]]
 	then
@@ -156,8 +166,7 @@ do
 				sleep 1 && clear && break
 
 			else
-				clear
-				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 				sleep 1 && clear && break
 			fi
 		done
