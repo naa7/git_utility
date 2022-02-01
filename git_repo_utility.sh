@@ -9,13 +9,13 @@ do
 	echo "+=========================================================+"
 	echo -e "| \033[36;1;82mOptions:\033[0m                                                |"
 	echo "+---------------------------------------------------------+"
-	echo -e "|  \033[33;1;82m[1] Commit & Push   [2] Pull w\o affecting local files\033[0m |"
-	echo -e "|  \033[33;1;82m[3] Pull changes    [4] Remove all local changes\033[0m       |"
-	echo -e "|  \033[33;1;82m[5] Files status    [6] Show changes since last commit\033[0m |"
-	echo -e "|  \033[33;1;82m[7] Simple log      [8] Create new repository\033[0m          |"
-	echo -e "|  \033[33;1;82m[9] Detailed log   [10] Delete repository\033[0m              |"
-	echo -e "| \033[33;1;82m[11] Restore file\033[0m   \033[33;1;82m[12] Commit Changes\033[0m                 |"
-	echo -e "| \033[33;1;82m[13] Push changes   [14] Undo last commit\033[0m               |"
+	echo -e "|  \033[33;1;82m[1] Commit only    [2] Undo last commit\033[0m                |"
+	echo -e "|  \033[33;1;82m[3] Push only      [4] Commit & push changes\033[0m           |"
+	echo -e "|  \033[33;1;82m[5] Pull changes   [6] Pull w\o affecting local files\033[0m  |"
+	echo -e "|  \033[33;1;82m[7] Files status   [8] Create new repository\033[0m           |"
+	echo -e "|  \033[33;1;82m[9] Simple log    [10] Delete repository\033[0m               |"
+	echo -e "| \033[33;1;82m[11] Detailed log  [12] Remove all local changes\033[0m        |"
+	echo -e "| \033[33;1;82m[13] Restore file  [14] Show changes since last commit\033[0m  |"
 	echo "+---------------------------------------------------------+"
 	echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                           |"
 	echo "+=========================================================+"
@@ -29,35 +29,8 @@ do
 		#echo -ne "\033[A\033[K\r"
 	#done
 
-	if [[ $input == 14 ]]
-	then
-		git status -s -b -unormal && sleep 1.5
-		if (git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1) ;
-		then
-			clear
-			git status -s -b -unormal && sleep 1.5
-			clear && echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1 && clear
-		
-		else
-			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1 && clear
-		fi
-		
-	elif [[ $input == 13 ]]
-	then
-		if (git push)
-		then
-			git status -s -b -unormal && sleep 1.5 && clear
-			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			sleep 1 && clear
-		else
-			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			git restore --staged .
-			sleep 1 && clear
-		fi			
-
-	elif [[ $input == 12 ]]
+	# Commit only
+	if [[ $input == 1 ]]
 	then
 		git status -s -b -unormal
 
@@ -131,7 +104,38 @@ do
 			continue
 		fi
 
-	elif [[ $input == 1 ]]
+	# Undo last commit
+	elif [[ $input == 2 ]]
+	then
+		git status -s -b -unormal && sleep 1.5
+		if (git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1) ;
+		then
+			clear
+			git status -s -b -unormal && sleep 1.5
+			clear && echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+			sleep 1 && clear
+		
+		else
+			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			sleep 1 && clear
+		fi
+	
+	# Push only	
+	elif [[ $input == 3 ]]
+	then
+		if (git push)
+		then
+			git status -s -b -unormal && sleep 1.5 && clear
+			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+			sleep 1 && clear
+		else
+			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			git restore --staged .
+			sleep 1 && clear
+		fi			
+
+	# Commit & push changes
+	elif [[ $input == 4 ]]
 	then
 		git status -s -b -unormal
 		#if ! (dpkg -s zenity >/dev/null 2>&1) && ! (rpm -q zenity >/dev/null 2>&1) && ! (yum list installed zenity >/dev/null 2>&1) && ! (dnf list installed zenity >/dev/null 2>&1) && ! (which zenity >/dev/null 2>&1) ;
@@ -219,7 +223,28 @@ do
 			continue
 		fi
 
-	elif [[ $input == 2 ]]
+	# Pull changes	
+	elif [[ $input == 5 ]]
+	then
+		while [[ true ]]
+		do
+			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+			if (git pull --no-edit >/dev/null 2>&1)
+			then
+				clear #c;ear
+				# I am here
+				git status -s -b -unormal && sleep 1.5 && clear
+				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				sleep 1 && clear && break
+
+			else
+				clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				sleep 1 && clear && break
+			fi
+		done
+
+	# Pull w/o affecting local files
+	elif [[ $input == 6 ]]
 	then
 		while [[ true ]]
 		do
@@ -239,44 +264,8 @@ do
 			fi
 		done
 
-	elif [[ $input == 3 ]]
-	then
-		while [[ true ]]
-		do
-			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
-			if (git pull --no-edit >/dev/null 2>&1)
-			then
-				clear #c;ear
-				# I am here
-				git status -s -b -unormal && sleep 1.5 && clear
-				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				sleep 1 && clear && break
-
-			else
-				clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				sleep 1 && clear && break
-			fi
-		done
-
-	elif [[ $input == 4 ]]
-	then
-		while [[ true ]]
-		do
-			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
-			if (git fetch >/dev/null 2>&1) && (git reset --hard HEAD >/dev/null 2>&1) && (git merge >/dev/null 2>&1) ;
-			then
-				clear
-				git status -s -b -unormal && sleep 1.5 && clear
-				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				sleep 1 && clear && break
-
-			else
-				clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				sleep 1 && clear && break
-			fi
-		done
-
-	elif [[ $input == 5 ]]
+	# Files Status
+	elif [[ $input == 7 ]]
 	then
 		if (git status -s -b -unormal | less --quiet -R)
 		then
@@ -286,32 +275,7 @@ do
 			sleep 1 && clear
 		fi
 
-	elif [[ $input == 6 ]]
-	then
-		if (git diff --color | less -R)
-		then
-
-			if (git diff == "")
-			then
-				echo "--- Repo is up to date ---" && sleep 1.5
-			fi
-			clear
-
-		else
-			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1 && clear
-		fi
-
-	elif [[ $input == 7 ]]
-	then
-		if (git log --color | less -R)
-		then
-			clear
-		else
-			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			sleep 1 && clear
-		fi
-
+	# Create new repository
 	elif [[ $input == 8 ]]
 	then
 		# checking if hub is installed and installing it if not and making the repository
@@ -532,13 +496,18 @@ do
 				sleep 1.5 && clear && continue	
 			fi
 
+	# Simple log
 	elif [[ $input == 9 ]]
 	then
-		if (git log -p --color | less -R)
+		if (git log --color | less -R)
 		then
 			clear
+		else
+			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			sleep 1 && clear
 		fi
 
+	# Delete repository
 	elif [[ $input == 10 ]]
 	then
 
@@ -598,7 +567,37 @@ do
 			fi
 		fi
 
+
+
+	# Detailed log
 	elif [[ $input == 11 ]]
+	then
+		if (git log -p --color | less -R)
+		then
+			clear
+		fi
+
+	# Remove all local changes
+	elif [[ $input == 12 ]]
+	then
+		while [[ true ]]
+		do
+			echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+			if (git fetch >/dev/null 2>&1) && (git reset --hard HEAD >/dev/null 2>&1) && (git merge >/dev/null 2>&1) ;
+			then
+				clear
+				git status -s -b -unormal && sleep 1.5 && clear
+				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				sleep 1 && clear && break
+
+			else
+				clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				sleep 1 && clear && break
+			fi
+		done
+
+	#Restore file
+	elif [[ $input == 13 ]]
 	then
 		echo "+========================================================+"
 		echo -e "|                   \033[32;1;82mGit Repo Utility\033[0m                     |"
@@ -630,12 +629,30 @@ do
 			clear && continue
 		fi
 
+	# Show changes since last commit
+	elif [[ $input == 14 ]]
+	then
+		if (git diff --color | less -R)
+		then
+
+			if (git diff == "")
+			then
+				echo "--- Repo is up to date ---" && sleep 1.5
+			fi
+			clear
+
+		else
+			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			sleep 1 && clear
+		fi
+
 	elif [[ $input == 'Q' || $input == 'q' ]]
 	then
 		echo -e "\033[30;42;5;82m--- Good Bye ---\033[0m" && sleep 1.5 && clear && break
 	else
 		echo -e "\033[30;41;2;82m--- Error, Entry not recognized! ---\033[0m"&& sleep 1.5 && clear && continue	
 	fi
+
 	
 done
 
