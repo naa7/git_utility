@@ -11,7 +11,7 @@ do
 	echo "+---------------------------------------------------------+"
 	echo -e "|  \033[33;1;82m[1] Commit only    [2] Undo last commit\033[0m                |"
 	echo -e "|  \033[33;1;82m[3] Push only      [4] Commit & push changes\033[0m           |"
-	echo -e "|  \033[33;1;82m[5] Pull changes   [6] Pull w\o affecting local files\033[0m  |"
+	echo -e "|  \033[33;1;82m[5] Pull w/o edit  [6] Pull w\o affecting local files\033[0m|"
 	echo -e "|  \033[33;1;82m[7] Files status   [8] Create new repository\033[0m           |"
 	echo -e "|  \033[33;1;82m[9] Simple log    [10] Delete repository\033[0m               |"
 	echo -e "| \033[33;1;82m[11] Detailed log  [12] Remove all local changes\033[0m        |"
