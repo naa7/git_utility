@@ -646,6 +646,7 @@ do
 			sleep 1 && clear
 		fi
 
+	# Quit
 	elif [[ $input == 'Q' || $input == 'q' ]]
 	then
 		echo -e "\033[30;42;5;82m--- Good Bye ---\033[0m" && sleep 1.5 && clear && break
