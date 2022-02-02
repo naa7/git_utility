@@ -810,7 +810,7 @@ function input_16 {
 
 function quit {
 
-			echo -e "\033[30;42;5;82m--- Good Bye ---\033[0m" && sleep 1.5 && clear
+			echo -e "\033[30;42;5;82m--- Good Bye ---\033[0m" && sleep 1 && clear
 
 }
 
