@@ -295,7 +295,7 @@ function input_4 {
 
 				elif [[ $fileName != 'R' && $fileName != 'r' ]]
 				then
-					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
+					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && return
 				else
 					clear && return
 				fi
