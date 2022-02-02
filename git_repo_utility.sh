@@ -10,83 +10,82 @@ function main {
 
 				read input && clear
 
-				# Commit only
+				#1 Commit only
 				if [[ $input == 1 ]]
 				then
 					input_1
 
-				# Undo last commit
+				#2 Undo last commit
 				elif [[ $input == 2 ]]
 				then
 					input_2
 
-				# Push only	
+				#3 Push only	
 				elif [[ $input == 3 ]]
 				then
 					input_3
 
-				# Commit & push changes
+				#4 Undo last push
 				elif [[ $input == 4 ]]
 				then
 					input_4
 
-				# Pull changes	
+				#5 Pull changes	
 				elif [[ $input == 5 ]]
 				then
 					input_5
 
-				# Pull w/o affecting local files
+				#6 Commit & push changes
 				elif [[ $input == 6 ]]
 				then
 					input_6
 
-				# Files Status
+				#7 Files Status
 				elif [[ $input == 7 ]]
 				then
 					input_7
 
-				# Create new repository
+				#8 Pull w/o affecting local files
 				elif [[ $input == 8 ]]
 				then
 					input_8
 
-				# Simple log
+				#9 Simple log
 				elif [[ $input == 9 ]]
 				then
 					input_9
 
-				# Delete repository
+				#10 Create new repository
 				elif [[ $input == 10 ]]
 				then
 					input_10
-					continue
 
-				# Detailed log
+				#11 Detailed log
 				elif [[ $input == 11 ]]
 				then
 					input_11
 
-				# Remove all local changes
+				#12 Delete repository
 				elif [[ $input == 12 ]]
 				then
 					input_12
 
-				#Restore file
+				#13 Restore file
 				elif [[ $input == 13 ]]
 				then
 					input_13
 
-				# Show changes since last commit
+				#14 Remove all local changes
 				elif [[ $input == 14 ]]
 				then
 					input_14
 
-				# Repo status
+				#15 Repo status
 				elif [[ $input == 15 ]]
 				then
 					input_15
 
-				#Undo last push
+				#16 Show changes since last commit
 				elif [[ $input == 16 ]]
 				then
 					input_16
@@ -114,13 +113,13 @@ function interface {
 			echo -e "| \033[36;1;82mOptions:\033[0m                                                |"
 			echo "+---------------------------------------------------------+"
 			echo -e "|  \033[33;1;82m[1] Commit only    [2] Undo last commit\033[0m                |"
-			echo -e "|  \033[33;1;82m[3] Push only      [4] Commit & push changes\033[0m           |"
-			echo -e "|  \033[33;1;82m[5] Pull changes   [6] Pull w\o affecting local files\033[0m  |"
-			echo -e "|  \033[33;1;82m[7] Files status   [8] Create new repository\033[0m           |"
-			echo -e "|  \033[33;1;82m[9] Simple log    [10] Delete repository\033[0m               |"
-			echo -e "| \033[33;1;82m[11] Detailed log  [12] Remove all local changes\033[0m        |"
-			echo -e "| \033[33;1;82m[13] Restore file  [14] Show changes since last commit\033[0m  |"
-			echo -e "| \033[33;1;82m[15] Repo status   [16] Undo last push\033[0m                  |"
+			echo -e "|  \033[33;1;82m[3] Push only      [4] Undo last push\033[0m                  |"
+			echo -e "|  \033[33;1;82m[5] Pull changes   [6] Commit & push changes\033[0m           |"
+			echo -e "|  \033[33;1;82m[7] Files status   [8] Pull w\o affecting local files\033[0m  |"
+			echo -e "|  \033[33;1;82m[9] Simple log    [10] Create new repository\033[0m           |"
+			echo -e "| \033[33;1;82m[11] Detailed log  [12] Delete repository\033[0m               |"
+			echo -e "| \033[33;1;82m[13] Restore file  [14] Remove all local changes\033[0m        |"
+			echo -e "| \033[33;1;82m[15] Repo status   [16] Show changes since last commit\033[0m  |"
 			echo "+---------------------------------------------------------+"
 			echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                           |"
 			echo "+=========================================================+"
@@ -238,26 +237,63 @@ function input_2 {
 
 function input_3 {
 
-			if (git push origin HEAD 2>/dev/null)
-			then
-				git status -s -b -unormal && sleep 1.5 && clear
-				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-			else
-				clear
-				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				git restore --staged .
-			fi
-			sleep 1 && clear			
+			while [[ true ]]
+			do
+				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+				if [[ $(git push origin HEAD >/dev/null 2>&1) == "Everything up-to-date" ]]
+				then
+					git status -s -b -unormal && sleep 1.5 && clear
+					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				elif [[ $(git push origin HEAD >/dev/null 2>&1) != "Everything up-to-date" ]]
+				then
+					clear
+					echo -e "\033[33;1;82m--- Everything up to date ---\033[0m"
+				else
+					clear
+					echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+					git restore --staged .
+				fi
+				sleep 1 && clear && break
+			done		
 
 }
 
 function input_4 {
+#if (git show HEAD > patch >/dev/null 2>&1) && (git revert HEAD --no-edit >/dev/null 2>&1) && (git apply patch >/dev/null 2>&1) ;
+
+			echo "Being developed..." && sleep 1 && clear	
+}
+
+function input_5 {
+
+			while [[ true ]]
+			do
+				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+				if [[ $(git pull --no-edit 2>/dev/null) != "Already up to date." ]]
+				then
+					clear
+					git status -s -b -unormal && sleep 1.5 && clear
+					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				elif [[ $(git pull --no-edit 2>/dev/null) == "Already up to date." ]]
+				then
+					clear
+					echo -e "\033[33;1;82m--- Already up to date. ---\033[0m"
+				else
+					clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				fi
+				sleep 1.5 && clear && break
+			done
+
+}
+
+function input_6 {
 
 			echo "+========================================================+"
 			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
 			echo "+========================================================+"
+			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
+			echo "+--------------------------------------------------------+"
 			git status -s -b -unormal
-
 			echo "+--------------------------------------------------------+"
 			echo -e "| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m                   |" 
 			echo "+========================================================+"
@@ -330,16 +366,20 @@ function input_4 {
 
 
 				# pushing to repository
-				if (git push origin HEAD 2>/dev/null)
-				then
-					git status -s -b -unormal && sleep 1.5 && clear
-					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				else
-					clear
-					echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-					git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1
-				fi
-				sleep 1 && clear
+				while [[ true ]]
+				do
+					echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+					if (git push origin HEAD 2>/dev/null)
+					then
+						git status -s -b -unormal && sleep 1.5 && clear
+						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+					else
+						clear
+						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+						git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1
+					fi
+					sleep 1 && clear && break
+				done
 			else
 				if (git reset .) || (git restore --staged .) ;
 				then
@@ -351,29 +391,19 @@ function input_4 {
 
 }
 
-function input_5 {
+function input_7 {
 
-			while [[ true ]]
-			do
-				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
-				if [[ $(git pull --no-edit 2>/dev/null) != "Already up to date." ]]
-				then
-					clear
-					git status -s -b -unormal && sleep 1.5 && clear
-					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				elif [[ $(git pull --no-edit 2>/dev/null) == "Already up to date." ]]
-				then
-					clear
-					echo -e "\033[33;1;82m--- Already up to date. ---\033[0m"
-				else
-					clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				fi
-					sleep 1.5 && clear && break
-			done
+			if (git status -s -b -unormal | less --quiet -R)
+			then
+				clear
+			else
+				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				sleep 1 && clear
+			fi
 
 }
 
-function input_6 {
+function input_8 {
 
 			while [[ true ]]
 			do
@@ -397,9 +427,9 @@ function input_6 {
 
 }
 
-function input_7 {
+function input_9 {
 
-			if (git status -s -b -unormal | less --quiet -R)
+			if (git log --oneline --color | less -R)
 			then
 				clear
 			else
@@ -409,7 +439,7 @@ function input_7 {
 
 }
 
-function input_8 {
+function input_10 {
 
 			# checking if hub is installed and installing it if not and making the repository
 			if ! (dpkg -s hub >/dev/null 2>&1) && ! (rpm -q hub >/dev/null 2>&1) && ! (yum list installed hub >/dev/null 2>&1) && ! (dnf list installed hub >/dev/null 2>&1) && ! (which hub >/dev/null 2>&1) ;
@@ -630,19 +660,16 @@ function input_8 {
 
 }
 
-function input_9 {
+function input_11 {
 
-			if (git log --oneline --color | less -R)
+			if (git log -p --color | less -R)
 			then
 				clear
-			else
-				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				sleep 1 && clear
 			fi
 
 }
 
-function input_10 {
+function input_12 {
 
 			echo "+========================================================+"
 			echo -e "|                   \033[32;1;82mGit Repo Utility\033[0m                     |"
@@ -696,36 +723,7 @@ function input_10 {
 				fi
 				sleep 1.5 		
 			fi
-			clear
-}
-
-function input_11 {
-
-			if (git log -p --color | less -R)
-			then
-				clear
-			fi
-
-}
-
-function input_12 {		
-	
-			while [[ true ]]
-			do
-				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
-				if (git fetch >/dev/null 2>&1) && (git reset --hard HEAD >/dev/null 2>&1) && (git merge >/dev/null 2>&1) ;
-				then
-					clear
-					git status -s -b -unormal && sleep 1.5 && clear
-					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-					sleep 1 && clear && break
-
-				else
-					clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-					sleep 1 && clear && break
-				fi
-			done
-
+			clear && return
 }
 
 function input_13 {
@@ -760,12 +758,23 @@ function input_13 {
 
 }
 
-function input_14 {
+function input_14 {		
+	
+			while [[ true ]]
+			do
+				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+				if (git fetch >/dev/null 2>&1) && (git reset --hard HEAD >/dev/null 2>&1) && (git merge >/dev/null 2>&1) ;
+				then
+					clear
+					git status -s -b -unormal && sleep 1.5 && clear
+					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+					sleep 1 && clear && break
 
-			if ! (git diff --color | less -R) ;
-			then
-				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-			fi
+				else
+					clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+					sleep 1 && clear && break
+				fi
+			done
 
 }
 
@@ -782,9 +791,12 @@ function input_15 {
 }
 
 function input_16 {
-#if (git show HEAD > patch >/dev/null 2>&1) && (git revert HEAD --no-edit >/dev/null 2>&1) && (git apply patch >/dev/null 2>&1) ;
 
-			echo "Being developed..." && sleep 1 && clear	
+			if ! (git diff --color | less -R) ;
+			then
+				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			fi
+
 }
 
 function quit {
