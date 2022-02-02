@@ -259,9 +259,17 @@ function input_3 {
 }
 
 function input_4 {
-#if (git show HEAD > patch >/dev/null 2>&1) && (git revert HEAD --no-edit >/dev/null 2>&1) && (git apply patch >/dev/null 2>&1) ;
-
-			echo "Being developed..." && sleep 1 && clear	
+			git status -s -b -unormal && sleep 1
+			delete=$(rm patch)
+			if (git show HEAD > patch >/dev/null 2>&1) && (git revert HEAD --no-edit 2>/dev/null) && (git apply patch >/dev/null 2>&1) && (rm patch) && (git push origin HEAD >/dev/null 2>&1) ;
+			then
+				clear
+				git status -s -b -unormal && sleep 1.5
+				clear && echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+			else
+				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			fi
+			sleep 1 && clear
 }
 
 function input_5 {
@@ -670,7 +678,7 @@ function input_11 {
 }
 
 function input_12 {
-
+			currentDir=$(echo $PWD)
 			echo "+========================================================+"
 			echo -e "|                   \033[32;1;82mGit Repo Utility\033[0m                     |"
 			echo "+========================================================+"
@@ -723,6 +731,7 @@ function input_12 {
 				fi
 				sleep 1.5 		
 			fi
+			cd $currentDir
 			clear && return
 }
 
@@ -780,7 +789,7 @@ function input_14 {
 
 function input_15 {
 
-			if [[ $(git diff) == '' ]] ;
+			if [[ $(git diff 2>/dev/null) == '' ]] ;
 			then
 				echo -e "\033[30;48;5;82m--- Repo is up to date ---\033[0m"
 			else
