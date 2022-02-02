@@ -224,7 +224,8 @@ function input_1 {
 function input_2 {
 
 			git status -s -b -unormal && sleep 1.5
-			if (git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1) ;
+			#if (git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1) ;
+			if [[ $(git show HEAD > patch >/dev/null 2>&1) && $(get revert HEAD --no-edit >/dev/null 2>&1) && $(git apply patch >/dev/null 2>&1) && $(rm patch) ]] ;
 			then
 				clear
 				git status -s -b -unormal && sleep 1.5
@@ -782,7 +783,6 @@ function input_15 {
 }
 
 function input_16 {
-#if (git show HEAD > patch >/dev/null 2>&1) && (git revert HEAD --no-edit >/dev/null 2>&1) && (git apply patch >/dev/null 2>&1) ;
 
 			echo "Being developed..." && sleep 1 && clear	
 }
