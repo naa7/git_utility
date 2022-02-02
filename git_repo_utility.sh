@@ -224,7 +224,8 @@ function input_1 {
 function input_2 {
 
 			git status -s -b -unormal && sleep 1.5
-			if (git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1) ;
+			#if (git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1) ;
+			if [[ $(git show HEAD > patch >/dev/null 2>&1) && $(get revert HEAD --no-edit >/dev/null 2>&1) && $(git apply patch >/dev/null 2>&1) && $(rm patch) ]] ;
 			then
 				clear
 				git status -s -b -unormal && sleep 1.5
@@ -238,7 +239,7 @@ function input_2 {
 
 function input_3 {
 
-			if (git push 2>/dev/null)
+			if (git push origin HEAD2>/dev/null)
 			then
 				git status -s -b -unormal && sleep 1.5 && clear
 				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
@@ -330,7 +331,7 @@ function input_4 {
 
 
 				# pushing to repository
-				if (git push 2>/dev/null)
+				if (git push origin HEAD 2>/dev/null)
 				then
 					git status -s -b -unormal && sleep 1.5 && clear
 					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
@@ -632,7 +633,7 @@ function input_8 {
 
 function input_9 {
 
-			if (git log --color | less -R)
+			if (git log --oneline --color | less -R)
 			then
 				clear
 			else
