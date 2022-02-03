@@ -260,13 +260,13 @@ function input_3 {
 
 function input_4 {
 			git status -s -b -unormal && sleep 1
-			delete=$(rm patch)
-			if (git show HEAD > patch >/dev/null 2>&1) && (git revert HEAD --no-edit 2>/dev/null) && (git apply patch >/dev/null 2>&1) && (rm patch) && (git push origin HEAD >/dev/null 2>&1) ;
+			if (git revert HEAD --no-edit >/dev/null 2>&1) && (git push origin HEAD >/dev/null 2>&1) ;
 			then
 				clear
 				git status -s -b -unormal && sleep 1.5
 				clear && echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 			else
+				clear
 				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 			fi
 			sleep 1 && clear
