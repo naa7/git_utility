@@ -30,7 +30,7 @@ function main {
 				then
 					input_4
 
-				#5 Pull changes	
+				#5 Files Status
 				elif [[ $input == 5 ]]
 				then
 					input_5
@@ -40,7 +40,7 @@ function main {
 				then
 					input_6
 
-				#7 Files Status
+				#7 Pull changes	
 				elif [[ $input == 7 ]]
 				then
 					input_7
@@ -114,8 +114,8 @@ function interface {
 			echo "+---------------------------------------------------------+"
 			echo -e "|  \033[33;1;82m[1] Commit only    [2] Undo last commit\033[0m                |"
 			echo -e "|  \033[33;1;82m[3] Push only      [4] Undo last push\033[0m                  |"
-			echo -e "|  \033[33;1;82m[5] Pull changes   [6] Commit & push changes\033[0m           |"
-			echo -e "|  \033[33;1;82m[7] Files status   [8] Pull w\o affecting local files\033[0m  |"
+			echo -e "|  \033[33;1;82m[5] Files status   [6] Commit & push changes\033[0m           |"
+			echo -e "|  \033[33;1;82m[7] Pull changes   [8] Pull w\o affecting local files\033[0m  |"
 			echo -e "|  \033[33;1;82m[9] Simple log    [10] Create new repository\033[0m           |"
 			echo -e "| \033[33;1;82m[11] Detailed log  [12] Delete repository\033[0m               |"
 			echo -e "| \033[33;1;82m[13] Restore file  [14] Remove all local changes\033[0m        |"
@@ -274,23 +274,13 @@ function input_4 {
 
 function input_5 {
 
-			while [[ true ]]
-			do
-				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
-				if [[ $(git pull --no-edit 2>/dev/null) != "Already up to date." ]]
-				then
-					clear
-					git status -s -b -unormal && sleep 1.5 && clear
-					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				elif [[ $(git pull --no-edit 2>/dev/null) == "Already up to date." ]]
-				then
-					clear
-					echo -e "\033[33;1;82m--- Already up to date. ---\033[0m"
-				else
-					clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				fi
-				sleep 1.5 && clear && break
-			done
+			if (git status -s -b -unormal | less --quiet -R)
+			then
+				clear
+			else
+				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				sleep 1 && clear
+			fi
 
 }
 
@@ -401,13 +391,23 @@ function input_6 {
 
 function input_7 {
 
-			if (git status -s -b -unormal | less --quiet -R)
-			then
-				clear
-			else
-				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-				sleep 1 && clear
-			fi
+			while [[ true ]]
+			do
+				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+				if [[ $(git pull --no-edit 2>/dev/null) != "Already up to date." ]]
+				then
+					clear
+					git status -s -b -unormal && sleep 1.5 && clear
+					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				elif [[ $(git pull --no-edit 2>/dev/null) == "Already up to date." ]]
+				then
+					clear
+					echo -e "\033[33;1;82m--- Already up to date. ---\033[0m"
+				else
+					clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				fi
+				sleep 1.5 && clear && break
+			done
 
 }
 
