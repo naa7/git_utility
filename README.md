@@ -5,7 +5,7 @@
 <img src="https://github.com/naa7/git_repo_utility/blob/main/git_repo_utility_walkThrough.gif"></br> 
 
 The idea of this project is to make a git utility to automate the process of pushing, pulling, restoring files from and to repository. Also, to display repository logs and display differences between
-local and remote files, more features are being added. Therefore, it is mainly to simplify working with git and save time. It is helpful for both experienced and beginner users.
+local and remote files, more features are being added. Therefore, it is mainly to simplify working with git and save time. It is helpful for both experienced and new users.
 
 
 ## To run the program:
