@@ -95,6 +95,11 @@ function main {
 				then
 					input_17
 
+				#18 Coming soon
+				elif [[ $input == 18 ]]
+				then
+					input_18
+
 				# Quit
 				elif [[ $input == 'Q' || $input == 'q' ]]
 				then
@@ -125,7 +130,7 @@ function interface {
 			echo -e "| \033[33;1;82m[11] Detailed log  [12] Delete repository\033[0m               |"
 			echo -e "| \033[33;1;82m[13] Restore file  [14] Remove all local changes\033[0m        |"
 			echo -e "| \033[33;1;82m[15] Repo status   [16] Show changes since last commit\033[0m  |"
-			echo -e "| \033[33;1;82m[17] Local status  [18] Coming soon...\033[0m                  |"
+			echo -e "| \033[33;1;82m[17] Local status  [18] Coming soon\033[0m                     |"
 			echo "+---------------------------------------------------------+"
 			echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                           |"
 			echo "+=========================================================+"
@@ -818,13 +823,23 @@ function input_17 {
 
 			cmd=$(echo $(git remote update ; git status -uno) | grep -o "Your branch is behind")
 
-			if [[ $cmd == "Your branch is behind" ]]
-			then
-				echo -e "\033[30;41;5;82m--- Local is NOT up to date! ---\033[0m"
-			else
-				echo -e "\033[30;48;5;82m--- Local is up to date! ---\033[0m"
-			fi
-			sleep 1.5 && clear
+			while [[ true ]]
+			do
+				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+				if [[ $cmd == "Your branch is behind" ]]
+				then
+					echo -e "\033[30;41;5;82m--- Local is NOT up to date! ---\033[0m"
+				else
+					echo -e "\033[30;48;5;82m--- Local is up to date! ---\033[0m"
+				fi
+				sleep 1.5 && clear && break
+			done
+
+}
+
+function input_18 {
+
+			echo -ne "\033[33;1;82mComing soon...\033[0m\033[K\r" && sleep 1 && clear
 
 }
 
