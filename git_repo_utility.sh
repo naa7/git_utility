@@ -5,7 +5,7 @@ function main {
 			clear
 			while [[ true ]]
 			do
-				# Interface 
+				# Interface
 				interface
 
 				read input && clear
@@ -20,7 +20,7 @@ function main {
 				then
 					input_2
 
-				#3 Push only	
+				#3 Push only
 				elif [[ $input == 3 ]]
 				then
 					input_3
@@ -40,7 +40,7 @@ function main {
 				then
 					input_6
 
-				#7 Pull changes	
+				#7 Pull changes
 				elif [[ $input == 7 ]]
 				then
 					input_7
@@ -177,7 +177,7 @@ function input_1 {
 				echo "+========================================================+"
 				echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
 				read fileName
-				
+
 				if [ -f $fileName ]
 				then
 					#adding a file
@@ -189,14 +189,14 @@ function input_1 {
 				else
 					clear && return
 				fi
-			
+
 			elif [[ $fileOption != 'R' && $fileOption != 'r' ]]
 			then
 				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
 			else
 				clear && return	
 			fi
-			
+
 			clear
 			echo "+========================================================+"
 			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
@@ -221,7 +221,7 @@ function input_1 {
 				git status -s -b -unormal && sleep 1.5 && clear
 				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 				sleep 1 && clear
-				
+
 			else
 				if (git reset .) || (git restore --staged .) ;
 				then
@@ -335,7 +335,7 @@ function input_6 {
 				echo "+========================================================+"
 				echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
 				read fileName
-				
+
 				if [ -f $fileName ]
 				then
 					#adding a file
@@ -352,9 +352,9 @@ function input_6 {
 			then
 				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && return
 			else
-				clear && return	
+				clear && return
 			fi
-			
+
 			clear
 			echo "+========================================================+"
 			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
@@ -488,14 +488,14 @@ function input_10 {
 					then
 						echo -e "\033[30;41;2;82mCouldn't install it, you need to install it manually\033[0m"
 						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-						sleep 2 && clear && return			
+						sleep 2 && clear && return
 					fi
 				else
 					echo -e "\033[30;41;2;82mhub is dependency for the program to work, Program Exit!\033[0m"
 					echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 					sleep 2 && clear && return
 				fi
-			fi		
+			fi
 
 				# Creating github repo
 				# Enter the type of repository before building 
@@ -555,7 +555,7 @@ function input_10 {
 
 					if [ ! -f "README.md" ]
 					then
-						echo "#hi" >> README.md
+						echo "## $name" >> README.md
 					fi
 
 					git add README.md >/dev/null 2>&1
@@ -569,7 +569,7 @@ function input_10 {
 
 					if [ ! -f "README.md" ]
 					then
-						echo "#hi" >> README.md
+						echo "## $name" >> README.md
 					fi
 
 					git add README.md >/dev/null 2>&1
@@ -580,7 +580,7 @@ function input_10 {
 					echo -e "\033[30;41;2;82m--- Error, Entry not recognized! ---\033[0m"
 					sleep 1.5 && clear && return
 				fi
-				
+
 				if [ $repository == 'P' ] || [ $repository == 'p' ]
 				then
 					# Checking if hub needs an access token to github account and making a file that stores the username,token, and protocol in ~/.config/ after following the mentioned steps 
@@ -645,7 +645,7 @@ function input_10 {
 						echo "---------------------------------------------------------------" >> temp
 						echo -ne "\nTo exit: click Crtl+x" >> temp
 						nano temp
-						rm temp		
+						rm temp
 						echo -n "Do you want to enter generated token? (Y/n): "
 						read choice
 						echo -ne "\033[A\033[2K\r"
@@ -677,7 +677,7 @@ function input_10 {
 				else
 					rm -rf $name
 					echo -e "\033[30;41;2;82m--- Error, Entry not recognized! ---\033[0m"
-					sleep 1.5 && clear && return	
+					sleep 1.5 && clear && return
 				fi
 
 }
@@ -720,7 +720,7 @@ function input_12 {
 				if ! (cd && cd $RepoToDelete >/dev/null 2>&1) && ! (cd && cd $DIRECTORY/$RepoToDelete >/dev/null 2>&1) ;
 				then
 					echo -e "\033[30;41;2;82m--- Error, Repository Not Found! \033[0m"
-				else	
+				else
 					if ! (hub delete $RepoToDelete 2>/dev/null)
 					then
 						clear
@@ -729,8 +729,8 @@ function input_12 {
 						clear && echo -n "Do you want to delete repository's local folder? (Y/n): "
 						read optional
 						clear
-						
-						if [[ $optional == 'Y' || $optional == 'y' ]]	
+
+						if [[ $optional == 'Y' || $optional == 'y' ]]
 						then
 							if [ -d $RepoToDelete ]
 							then
@@ -743,7 +743,7 @@ function input_12 {
 						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 					fi
 				fi
-				sleep 1.5 		
+				sleep 1.5
 			fi
 			cd $currentDir
 			clear && return
@@ -765,7 +765,7 @@ function input_13 {
 			echo -ne "\033[4A\r| \033[36;1;82mEnter file name:\033[0m "
 			read name
 			clear
-			
+
 			if [[ $name != 'R' && $name != 'r' ]]
 			then
 				if (git restore $name >/dev/null 2>&1)
@@ -781,8 +781,7 @@ function input_13 {
 
 }
 
-function input_14 {		
-	
+function input_14 {
 			while [[ true ]]
 			do
 				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
