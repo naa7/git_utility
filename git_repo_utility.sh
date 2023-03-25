@@ -267,7 +267,7 @@ function input_3 {
 					git restore --staged .
 				fi
 				sleep 1 && clear && break
-			done		
+			done
 
 }
 
@@ -287,7 +287,8 @@ function input_4 {
 
 function input_5 {
 
-			if (git status -s -b -unormal | less --quiet -R)
+			#if (git status -s -b -unormal | less --quiet -R)
+			if (git -c color.status=always status -sb -unormal | less --quiet -Rc)
 			then
 				clear
 			else
