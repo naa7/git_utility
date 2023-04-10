@@ -336,10 +336,11 @@ function input_6 {
 				echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
 				read fileName
 
-				if [ -f $fileName ]
+				if [ -f $fileName ] || [ -d $fileName ]
 				then
 					#adding a file
 					git add $fileName >/dev/null 2>&1
+				
 
 				elif [[ $fileName != 'R' && $fileName != 'r' ]]
 				then
