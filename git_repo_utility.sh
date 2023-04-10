@@ -130,7 +130,7 @@ function interface {
 			echo -e "| \033[33;1;82m[11] Detailed log  [12] Delete repository\033[0m               |"
 			echo -e "| \033[33;1;82m[13] Restore file  [14] Remove all local changes\033[0m        |"
 			echo -e "| \033[33;1;82m[15] Repo status   [16] Show changes since last commit\033[0m  |"
-			echo -e "| \033[33;1;82m[17] Local status  [18] Coming soon\033[0m                     |"
+			echo -e "| \033[33;1;82m[17] Local status  [18] Remove a file/folder from repo\033[0m  |"
 			echo "+---------------------------------------------------------+"
 			echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                           |"
 			echo "+=========================================================+"
@@ -140,7 +140,7 @@ function interface {
 
 }
 
-function input_1 {
+function interface_child_1 {
 
 			echo "+========================================================+"
 			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
@@ -149,6 +149,25 @@ function input_1 {
 			echo "+--------------------------------------------------------+"
 			git status -s -b -unormal
 			echo "+--------------------------------------------------------+"
+
+}
+
+function interface_child_2 {
+
+			echo "+========================================================+"
+			echo -e "|                   \033[32;1;82mGit Repo Utility\033[0m                     |"
+			echo "+========================================================+"
+			echo -e "| \033[36;1;82mDirectory list:\033[0m                                        |"
+			echo "+--------------------------------------------------------+"
+			cd && ls --color -d -1a */
+			echo "+--------------------------------------------------------+"
+			
+}
+
+
+function input_1 {
+
+			interface_child_1
 			echo -e "| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m                   |" 
 			echo "+========================================================+"
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
@@ -164,13 +183,7 @@ function input_1 {
 
 			elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' || $comment != 'r' ]]
 			then
-				echo "+========================================================+"
-				echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
-				echo "+========================================================+"
-				echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
-				echo "+--------------------------------------------------------+"
-				git status -s -b -unormal
-				echo "+========================================================+"
+				interface_child_1
 				echo -e "| \033[36;1;82mEnter name of file:\033[0m                                    |"
 				echo "+========================================================+"
 				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
@@ -178,7 +191,7 @@ function input_1 {
 				echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
 				read fileName
 
-				if [ -f $fileName ]
+				if [ -f $fileName ] || [ -d $fileName ]
 				then
 					#adding a file
 					git add $fileName >/dev/null 2>&1
@@ -198,13 +211,7 @@ function input_1 {
 			fi
 
 			clear
-			echo "+========================================================+"
-			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
-			echo "+========================================================+"
-			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
-			echo "+--------------------------------------------------------+"
-			git status -s -b -unormal
-			echo "+========================================================+"
+			interface_child_2
 			echo -e "| \033[36;1;82mEnter comment to commit changes:\033[0m                       |"
 			echo "+========================================================+"
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
@@ -300,13 +307,7 @@ function input_5 {
 
 function input_6 {
 
-			echo "+========================================================+"
-			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
-			echo "+========================================================+"
-			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
-			echo "+--------------------------------------------------------+"
-			git status -s -b -unormal
-			echo "+--------------------------------------------------------+"
+			interface_child_1
 			echo -e "| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m                   |" 
 			echo "+========================================================+"
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
@@ -322,13 +323,7 @@ function input_6 {
 
 			elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' || $comment != 'r' ]]
 			then
-				echo "+========================================================+"
-				echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
-				echo "+========================================================+"
-				echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
-				echo "+--------------------------------------------------------+"
-				git status -s -b -unormal
-				echo "+========================================================+"
+				interface_child_1
 				echo -e "| \033[36;1;82mEnter name of file:\033[0m                                    |"
 				echo "+========================================================+"
 				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
@@ -357,13 +352,7 @@ function input_6 {
 			fi
 
 			clear
-			echo "+========================================================+"
-			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
-			echo "+========================================================+"
-			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
-			echo "+--------------------------------------------------------+"
-			git status -s -b -unormal
-			echo "+========================================================+"
+			interface_child_1
 			echo -e "| \033[36;1;82mEnter comment to commit:\033[0m                               |"
 			echo "+========================================================+"
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
@@ -514,13 +503,8 @@ function input_10 {
 				fi
 
 				# Enter the Directory where the folder and github repository will reside
-				echo "+========================================================+"
-				echo -e "|                   \033[32;1;82mGit Repo Utility\033[0m                     |"
-				echo "+========================================================+"
-				echo -e "| \033[36;1;82mDirectory list:\033[0m                                        |"
-				echo "+--------------------------------------------------------+"
-				cd && ls --color -d */
-				echo "+--------------------------------------------------------+"
+				
+				interface_child_2
 				echo -e "| \033[36;1;82mPress [Enter] to reside in current directory\033[0m \033[31;1;82mOR\033[0m        |"
 				echo -e "| \033[36;1;82mEnter name where repo should reside: \033[0m                  |"
 				echo "+========================================================+"
@@ -694,13 +678,7 @@ function input_11 {
 
 function input_12 {
 			currentDir=$(echo $PWD)
-			echo "+========================================================+"
-			echo -e "|                   \033[32;1;82mGit Repo Utility\033[0m                     |"
-			echo "+========================================================+"
-			echo -e "| \033[36;1;82mDirectory list:\033[0m                                        |"
-			echo "+--------------------------------------------------------+"
-			cd && ls --color -d */
-			echo "+--------------------------------------------------------+"
+			interface_child_2
 			echo -e "| \033[36;1;82mPress [Enter] if repo resides in current directory\033[0m \033[31;1;82mOR\033[0m  |"
 			echo -e "| \033[36;1;82mEnter name where repo resides: \033[0m                        |"
 			echo "+========================================================+"
@@ -757,7 +735,7 @@ function input_13 {
 			echo "+========================================================+"
 			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
 			echo "+--------------------------------------------------------+"
-			ls --color -p | grep -v /
+			ls --color -p -1a | grep -v /
 			echo "+--------------------------------------------------------+"
 			echo -e "| \033[36;1;82mEnter file name:\033[0m                                       |"
 			echo "+========================================================+"
@@ -842,7 +820,72 @@ function input_17 {
 
 function input_18 {
 
-			echo -ne "\033[33;1;82mComing soon...\033[0m\033[K\r" && sleep 1 && clear
+			echo "+========================================================+"
+			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+			echo "+========================================================+"
+			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
+			echo "+--------------------------------------------------------+"
+			ls --color -1p
+			echo "+--------------------------------------------------------+"
+			echo -e "| \033[36;1;82mEnter name of file:\033[0m                                    |"
+			echo "+========================================================+"
+			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+			echo "+========================================================+"
+			echo -ne "\033[4A\r| \033[36;1;82mEnter name of file/folder: \033[0m"
+			read fileName
+
+			if [ -f $fileName ] || [ -d $fileName ]
+			then
+				#removing file/folder
+				git rm -r --cached $fileName >/dev/null 2>&1
+
+			elif [[ $fileName != 'R' && $fileName != 'r' ]]
+			then
+				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
+			else
+				clear && return
+			fi
+			
+			clear
+			interface_child_1
+			echo -e "| \033[36;1;82mEnter comment to commit:\033[0m                               |"
+			echo "+========================================================+"
+			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+			echo "+========================================================+"
+			echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit: \033[0m"
+			read comment && clear
+
+			if [[ $comment != 'R' && $comment != 'r' ]]
+			then
+
+				# commiting changes
+				git commit -m "$comment" >/dev/null 2>&1
+
+
+				# pushing to repository
+				while [[ true ]]
+				do
+					echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+					if (git push origin HEAD 2>/dev/null)
+					then
+						git status -s -b -unormal && sleep 1.5 && clear
+						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+					else
+						clear
+						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+						git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1
+					fi
+					sleep 1 && clear && break
+				done
+			else
+				if (git reset .) || (git restore --staged .) ;
+				then
+					clear
+				else
+					echo "\033[30;41;2;82m--- Error! ---\033[0m" && sleep 1 && clear		
+				fi
+			fi
+			#echo -ne "\033[33;1;82mComing soon...\033[0m\033[K\r" && sleep 1 && clear
 
 }
 
