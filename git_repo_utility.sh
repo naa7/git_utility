@@ -95,10 +95,15 @@ function main {
 				then
 					input_17
 
-				#18 Coming soon
+				#18 Remove file/folder from repo
 				elif [[ $input == 18 ]]
 				then
 					input_18
+				
+				#19 merge branch
+				elif [[ $input == 19 ]]
+				then
+					input_19
 
 				# Quit
 				elif [[ $input == 'Q' || $input == 'q' ]]
@@ -131,6 +136,7 @@ function interface {
 			echo -e "| \033[33;1;82m[13] Restore file  [14] Remove all local changes\033[0m        |"
 			echo -e "| \033[33;1;82m[15] Repo status   [16] Show changes since last commit\033[0m  |"
 			echo -e "| \033[33;1;82m[17] Local status  [18] Remove a file/folder from repo\033[0m  |"
+			echo -e "| \033[33;1;82m[19] Merge branch \033[0m                                      |"
 			echo "+---------------------------------------------------------+"
 			echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                           |"
 			echo "+=========================================================+"
@@ -887,6 +893,27 @@ function input_18 {
 			fi
 			#echo -ne "\033[33;1;82mComing soon...\033[0m\033[K\r" && sleep 1 && clear
 
+}
+
+function input_19 {
+	if (git fetch --all 2>/dev/null) 
+	then
+		git branch
+		echo -ne "Enter merging from branch name: "
+		read branchName1
+		echo -ne "Enter merging to branch name: "
+		read branchName2
+
+		echo -e "\033[A\033[2K$branchName1"
+		if (git checkout $branchName2 && git pull && git checkout $branchName1 && git pull && git rebase -i $branchName2 && git checkout $branchName2 && git merge $branchName1 && git push origin $branchName1) 
+		then
+			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+		else
+			clear
+			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+		fi
+	fi
+	sleep 1 && clear
 }
 
 function quit {
