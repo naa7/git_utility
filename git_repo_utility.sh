@@ -80,7 +80,7 @@ function main {
 				then
 					input_14
 
-				#15 Repo status
+				#15 Remote status
 				elif [[ $input == 15 ]]
 				then
 					input_15
@@ -95,7 +95,7 @@ function main {
 				then
 					input_17
 
-				#18 Remove file/folder from repo
+				#18 Remove file/folder from remote
 				elif [[ $input == 18 ]]
 				then
 					input_18
@@ -104,6 +104,11 @@ function main {
 				elif [[ $input == 19 ]]
 				then
 					input_19
+				
+				#20 Delete local and remote branch
+				elif [[ $input == 20 ]]
+				then
+					input_20
 
 				# Quit
 				elif [[ $input == 'Q' || $input == 'q' ]]
@@ -134,9 +139,9 @@ function interface {
 			echo -e "|  \033[33;1;82m[9] Simple log    [10] Create new repository\033[0m           |"
 			echo -e "| \033[33;1;82m[11] Detailed log  [12] Delete repository\033[0m               |"
 			echo -e "| \033[33;1;82m[13] Restore file  [14] Remove all local changes\033[0m        |"
-			echo -e "| \033[33;1;82m[15] Repo status   [16] Show changes since last commit\033[0m  |"
-			echo -e "| \033[33;1;82m[17] Local status  [18] Remove a file/folder from repo\033[0m  |"
-			echo -e "| \033[33;1;82m[19] Merge branch \033[0m                                      |"
+			echo -e "| \033[33;1;82m[15] Remote status [16] Show changes since last commit\033[0m  |"
+			echo -e "| \033[33;1;82m[17] Local status  [18] Remove a file/folder from remote\033[0m|"
+			echo -e "| \033[33;1;82m[19] Merge branch  [20] Delete local & remote branch\033[0m    |"
 			echo "+---------------------------------------------------------+"
 			echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                           |"
 			echo "+=========================================================+"
@@ -179,7 +184,7 @@ function input_1 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m"
-			read fileOption
+			read -r  fileOption
 			clear
 
 			if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
@@ -195,7 +200,7 @@ function input_1 {
 				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 				echo "+========================================================+"
 				echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
-				read fileName
+				read -r  fileName
 
 				if [ -f $fileName ] || [ -d $fileName ]
 				then
@@ -223,7 +228,7 @@ function input_1 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
-			read comment && clear
+			read -r  comment && clear
 
 			if [[ $comment != 'R' && $comment != 'r' ]]
 			then
@@ -249,6 +254,7 @@ function input_1 {
 function input_2 {
 
 			git status -s -b -unormal && sleep 1.5
+			# git reset HEAD~1 --mixed
 			if (git reset HEAD~1 --soft && git restore --staged . >/dev/null 2>&1) ;
 			then
 				clear
@@ -286,7 +292,8 @@ function input_3 {
 
 function input_4 {
 			git status -s -b -unormal && sleep 1
-			if (git revert HEAD --no-edit >/dev/null 2>&1) && (git push origin HEAD >/dev/null 2>&1) ;
+			# git revert HEAD --no-edit && git push origin HEAD // create a "revert" commit
+			if (git reset HEAD~1 >/dev/null 2>&1) && (git push -f origin HEAD >/dev/null 2>&1) ;
 			then
 				clear
 				git status -s -b -unormal && sleep 1.5
@@ -319,7 +326,7 @@ function input_6 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m"
-			read fileOption
+			read -r  fileOption
 			clear
 
 			if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
@@ -335,7 +342,7 @@ function input_6 {
 				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 				echo "+========================================================+"
 				echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
-				read fileName
+				read -r  fileName
 
 				if [ -f $fileName ] || [ -d $fileName ]
 				then
@@ -379,7 +386,7 @@ function input_6 {
 					echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
 					if (git push origin HEAD 2>/dev/null)
 					then
-						git status -s -b -unormal && sleep 1.5 && clear
+						clear && git status -s -b -unormal && sleep 1.5 && clear
 						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 					else
 						clear
@@ -403,13 +410,22 @@ function input_7 {
 
 			while [[ true ]]
 			do
-				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
-				if [[ $(git pull --no-edit 2>/dev/null) != "Already up to date." ]]
+				git branch -l
+				echo -ne "Enter the branch name to pull from or [r]eturn: "
+				read -r branchName
+
+				if [[ $branchName == 'r' || $branchName == 'R' ]]
+				then
+					clear && break
+				fi
+
+				clear && echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
+				if [[ $(git pull --no-edit origin $branchName 2>/dev/null) != "Already up to date." ]]
 				then
 					clear
 					git status -s -b -unormal && sleep 1.5 && clear
 					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				elif [[ $(git pull --no-edit 2>/dev/null) == "Already up to date." ]]
+				elif [[ $(git pull --no-edit origin $branchName 2>/dev/null) == "Already up to date." ]]
 				then
 					clear
 					echo -e "\033[33;1;82m--- Already up to date. ---\033[0m"
@@ -430,7 +446,7 @@ function input_8 {
 				# git pull is basically git fetch && git merge
 				# git stash pop = git stash apply + git stash drop
 				#git stash pop // if git stash pop doesn't work, then git stash apply + git stash drop work the same way
-				if (git stash -u >/dev/null 2>&1) && (git pull >/dev/null 2>&1) && (git stash apply >/dev/null 2>&1) && (git stash drop >/dev/null 2>&1) ;
+				if (git stash -u >/dev/null 2>&1) && (git pull origin HEAD >/dev/null 2>&1) && (git stash apply >/dev/null 2>&1) && (git stash drop >/dev/null 2>&1) ;
 				then
 					clear
 					git status -s -b -unormal && sleep 1.5 && clear
@@ -463,7 +479,7 @@ function input_10 {
 			if ! (dpkg -s hub >/dev/null 2>&1) && ! (rpm -q hub >/dev/null 2>&1) && ! (yum list installed hub >/dev/null 2>&1) && ! (dnf list installed hub >/dev/null 2>&1) && ! (which hub >/dev/null 2>&1) ;
 			then
 				echo -n "hub is not found! Do you want to install it? (Y/n): "
-				read answer
+				read -r  answer
 				echo -ne "\033[A\033[2K\r"
 
 				if [[ $answer == 'Y' || $answer == 'y' ]] 
@@ -496,7 +512,7 @@ function input_10 {
 				# Creating github repo
 				# Enter the type of repository before building 
 				echo -n "Create a [P]ublic or [PR]ivate repository? (P/pr/[R]eturn): "
-				read repository
+				read -r  repository
 
 				if [[ $repository == 'P' || $repository == 'p' || $repository == 'PR' || $repository == 'Pr' || $repository == 'pR' || $repository == 'pr' ]]
 				then
@@ -517,7 +533,7 @@ function input_10 {
 				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 				echo "+========================================================+"
 				echo -ne "\033[4A\r| \033[36;1;82mEnter name where repo should reside: \033[0m"
-				read DIRECTORY
+				read -r  DIRECTORY
 				clear
 
 				#counter=5
@@ -536,7 +552,7 @@ function input_10 {
 
 				# Enter the name of the repository to name both the local folder and github repository
 				echo -n "Enter name of repository: "
-				read name
+				read -r  name
 				echo -ne "\033[A\033[2K\r"
 
 				# making the local folder
@@ -592,13 +608,13 @@ function input_10 {
 						nano temp
 						rm temp
 						echo -n "Do you want to enter generated token? (Y/n): "
-						read choice
+						read -r  choice
 						echo -ne "\033[A\033[2K\r"
 
 						if [[ $choice == 'Y' || $choice == 'y' ]]
 						then
 							echo -n "Enter your generated token: "
-							read token
+							read -r  token
 							echo -ne "\033[A\033[2K\r" && cd ~/.config/
 							echo -n "Enter your github username: " && read username
 							echo -ne "\033[A\033[2K\r"
@@ -638,13 +654,13 @@ function input_10 {
 						nano temp
 						rm temp
 						echo -n "Do you want to enter generated token? (Y/n): "
-						read choice
+						read -r  choice
 						echo -ne "\033[A\033[2K\r"
 
 						if [[ $choice == 'Y' || $choice == 'y' ]]
 						then
 							echo -n "Enter your generated token: "
-							read token
+							read -r  token
 							echo -ne "\033[A\033[2K\r" && cd ~/.config/
 							echo -n "Enter your github username: " && read username
 							echo -ne "\033[A\033[2K\r"
@@ -691,7 +707,7 @@ function input_12 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mEnter name where repo resides: \033[0m"
-			read DIRECTORY
+			read -r  DIRECTORY
 			clear
 
 			if [[ $DIRECTORY != 'R' && $DIRECTORY != 'r' ]]
@@ -699,7 +715,7 @@ function input_12 {
 
 				# Enter the name of the repository to delete
 				echo -n "Enter name of repository: "
-				read RepoToDelete
+				read -r  RepoToDelete
 				echo -ne "\033[A\033[2K\r"
 
 				if ! (cd && cd $RepoToDelete >/dev/null 2>&1) && ! (cd && cd $DIRECTORY/$RepoToDelete >/dev/null 2>&1) ;
@@ -712,7 +728,7 @@ function input_12 {
 						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 					else
 						clear && echo -n "Do you want to delete repository's local folder? (Y/n): "
-						read optional
+						read -r  optional
 						clear
 
 						if [[ $optional == 'Y' || $optional == 'y' ]]
@@ -748,7 +764,7 @@ function input_13 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mEnter file name:\033[0m "
-			read name
+			read -r  name
 			clear
 
 			if [[ $name != 'R' && $name != 'r' ]]
@@ -770,7 +786,7 @@ function input_14 {
 			while [[ true ]]
 			do
 				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
-				if (git fetch >/dev/null 2>&1) && (git reset --hard HEAD >/dev/null 2>&1) && (git merge >/dev/null 2>&1) ;
+				if (git fetch --all >/dev/null 2>&1) && (git reset --hard HEAD >/dev/null 2>&1) && (git merge >/dev/null 2>&1) ;
 				then
 					clear
 					git status -s -b -unormal && sleep 1.5 && clear
@@ -787,7 +803,8 @@ function input_14 {
 
 function input_15 {
 
-			if [[ $(git diff 2>/dev/null) == '' ]] ;
+			git fetch >/dev/null 2>&1
+			if [[ $(git diff @{u} 2>/dev/null) == '' ]] ;
 			then
 				echo -e "\033[30;48;5;82m--- Repo is up to date ---\033[0m"
 			else
@@ -803,7 +820,7 @@ function input_16 {
 			then
 				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 			fi
-
+			sleep 1.5 && clear
 }
 
 function input_17 {
@@ -838,7 +855,7 @@ function input_18 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mEnter name of file/folder: \033[0m"
-			read fileName
+			read -r  fileName
 
 			if [ -f $fileName ] || [ -d $fileName ]
 			then
@@ -859,7 +876,7 @@ function input_18 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit: \033[0m"
-			read comment && clear
+			read -r  comment && clear
 
 			if [[ $comment != 'R' && $comment != 'r' ]]
 			then
@@ -896,22 +913,66 @@ function input_18 {
 }
 
 function input_19 {
-	if (git fetch --all 2>/dev/null) 
+	if (git fetch --all >/dev/null 2>&1)
 	then
-		git branch
-		echo -ne "Enter merging from branch name: "
-		read branchName1
-		echo -ne "Enter merging to branch name: "
-		read branchName2
-
-		echo -e "\033[A\033[2K$branchName1"
-		if (git checkout $branchName2 && git pull && git checkout $branchName1 && git pull && git rebase -i $branchName2 && git checkout $branchName2 && git merge $branchName1 && git push origin $branchName1) 
+		if (git branch -l)
 		then
-			echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-		else
-			clear
-			echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			echo -ne "Enter name of branch to merge from: "
+			read -r  branchName1
+			echo -ne "Enter name of branch to merge to: "
+			read -r  branchName2
+
+			if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1) 
+			then
+				echo -e "\033[A\033[2K$branchName1"
+				if ((git checkout $branchName2 && git pull && git checkout $branchName1 && git pull && git rebase -i $branchName2 && 
+						git checkout $branchName2 && git merge $branchName1 && git push origin $branchName1) >/dev/null 2>&1) 
+				then
+					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+				else
+					clear
+						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+				fi
+			elif [[ $branchName1 != 'R' && $branchName1 != 'r' && $branchName2 != 'R' && $branchName2 != 'r' ]]
+				then
+					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
+			else
+					clear && return
+			fi
 		fi
+	fi
+	sleep 1 && clear
+}
+
+function input_20 {
+	if (git fetch --all >/dev/null 2>&1) 
+		then
+			if (git branch -l)
+			then
+				echo -ne "Enter branch name to delete: "
+				read -r  branchName1
+				echo -ne "Enter branch name to checkout: "
+				read -r branchName2
+
+				if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1)
+				then
+					echo -e "\033[A\033[2K$branchName1"
+					if ((git checkout $branchName2 && git branch -d $branchName1 && git push origin --delete $branchName1) >/dev/null 2>&1) 
+					then
+						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+					else
+						clear
+						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+					fi
+				elif [[ $branchName1 != 'R' && $branchName1 != 'r' && $branchName2 != 'R' && $branchName2 != 'r' ]]
+				then
+					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
+				else
+					clear && return
+				fi
+			else
+        		clear && echo -e "\033[30;41;2;82m--- Error: No branches found ---\033[0m" && sleep 1.5 && clear
+    		fi
 	fi
 	sleep 1 && clear
 }
