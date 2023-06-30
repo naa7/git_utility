@@ -921,10 +921,10 @@ function input_19 {
 			read -r  branchName1
 			echo -ne "Enter name of branch to merge to: "
 			read -r  branchName2
+			clear
 
 			if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1) 
 			then
-				echo -e "\033[A\033[2K$branchName1"
 				if ((git checkout $branchName2 && git pull && git checkout $branchName1 && git pull && git rebase -i $branchName2 && 
 						git checkout $branchName2 && git merge $branchName1 && git push origin $branchName1) >/dev/null 2>&1) 
 				then
@@ -953,10 +953,10 @@ function input_20 {
 				read -r  branchName1
 				echo -ne "Enter branch name to checkout: "
 				read -r branchName2
+				clear
 
 				if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1)
 				then
-					echo -e "\033[A\033[2K$branchName1"
 					if ((git checkout $branchName2 && git branch -d $branchName1 && git push origin --delete $branchName1) >/dev/null 2>&1) 
 					then
 						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
