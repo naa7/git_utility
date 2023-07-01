@@ -222,7 +222,7 @@ function input_1 {
 			fi
 
 			clear
-			interface_child_2
+			interface_child_1
 			echo -e "| \033[36;1;82mEnter comment to commit changes:\033[0m                       |"
 			echo "+========================================================+"
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
