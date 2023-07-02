@@ -275,11 +275,11 @@ function input_3 {
 			while [[ true ]]
 			do
 				echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
-				if [[ $(git push origin HEAD >/dev/null 2>&1) == "Everything up-to-date" ]]
+				if [[ $(git push origin HEAD >/dev/null 2>&1) != "Everything up-to-date" ]]
 				then
 					git status -s -b -unormal && sleep 1.5 && clear
 					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				elif [[ $(git push origin HEAD >/dev/null 2>&1) != "Everything up-to-date" ]]
+				elif [[ $(git push origin HEAD >/dev/null 2>&1) == "Everything up-to-date" ]]
 				then
 					clear
 					echo -e "\033[33;1;82m--- Everything up to date ---\033[0m"
