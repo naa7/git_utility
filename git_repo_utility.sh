@@ -178,76 +178,79 @@ function interface_child_2 {
 
 function input_1 {
 
-			interface_child_1
-			echo -e "| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m                   |" 
-			echo "+========================================================+"
-			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
-			echo "+========================================================+"
-			echo -ne "\033[4A\r| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m"
-			read -r  fileOption
-			clear
-
-			if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
-			then
-				# adding files
-				git add . >/dev/null 2>&1
-
-			elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' || $comment != 'r' ]]
-			then
+			while [[ true ]]
+			do
 				interface_child_1
-				echo -e "| \033[36;1;82mEnter name of file:\033[0m                                    |"
+				echo -e "| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m                   |" 
 				echo "+========================================================+"
 				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 				echo "+========================================================+"
-				echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
-				read -r  fileName
-
-				if [ -f $fileName ] || [ -d $fileName ]
-				then
-					#adding a file
-					git add $fileName >/dev/null 2>&1
-
-				elif [[ $fileName != 'R' && $fileName != 'r' ]]
-				then
-					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
-				else
-					clear && return
-				fi
-
-			elif [[ $fileOption != 'R' && $fileOption != 'r' ]]
-			then
-				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
-			else
-				clear && return	
-			fi
-
-			clear
-			interface_child_1
-			echo -e "| \033[36;1;82mEnter comment to commit changes:\033[0m                       |"
-			echo "+========================================================+"
-			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
-			echo "+========================================================+"
-			echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
-			read -r  comment && clear
-
-			if [[ $comment != 'R' && $comment != 'r' ]]
-			then
-
-				# commiting changes
-				git commit -m "$comment" >/dev/null 2>&1
+				echo -ne "\033[4A\r| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m"
+				read -r fileOption
 				clear
-				git status -s -b -unormal && sleep 1.5 && clear
-				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-				sleep 1 && clear
 
-			else
-				if (git reset .) || (git restore --staged .) ;
+				if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' && $comment != 'r' ]]
 				then
-					clear
+					# adding files
+					git add . >/dev/null 2>&1
+
+				elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' && $comment != 'r' ]]
+				then
+					interface_child_1
+					echo -e "| \033[36;1;82mEnter name of file:\033[0m                                    |"
+					echo "+========================================================+"
+					echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+					echo "+========================================================+"
+					echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
+					read -ei "" -p "| " -r fileName
+
+					if [ -f $fileName ] || [ -d $fileName ]
+					then
+						#adding a file
+						git add $fileName >/dev/null 2>&1
+
+					elif [[ $fileName != 'R' && $fileName != 'r' ]]
+					then
+						clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue
+					else
+						clear && continue
+					fi
+
+				elif [[ $fileOption != 'R' && $fileOption != 'r' ]]
+				then
+					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear && continue
 				else
-					echo "\033[30;41;2;82m--- Error! ---\033[0m" && sleep 1 && clear		
+					clear && break	
 				fi
-			fi
+
+				clear
+				interface_child_1
+				echo -e "| \033[36;1;82mEnter comment to commit changes:\033[0m                       |"
+				echo "+========================================================+"
+				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
+				echo "+========================================================+"
+				echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
+				read -r  comment && clear
+
+				if [[ $comment != 'R' && $comment != 'r' ]]
+				then
+
+					# commiting changes
+					git commit -m "$comment" >/dev/null 2>&1
+					clear
+					git status -s -b -unormal && sleep 1.5 && clear
+					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+					sleep 1 && clear
+
+				else
+					if (git reset .) || (git restore --staged .) ;
+					then
+						clear && continue
+					else
+						echo "\033[30;41;2;82m--- Error! ---\033[0m" && sleep 1 && clear && break		
+					fi
+				fi
+			done
 
 }
 
@@ -326,7 +329,7 @@ function input_6 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mAdd [A]ll or [s]pecific file (A/s): \033[0m"
-			read -r  fileOption
+			read -r fileOption
 			clear
 
 			if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
@@ -342,7 +345,7 @@ function input_6 {
 				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 				echo "+========================================================+"
 				echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
-				read -r  fileName
+				read -ei "" -p "| " -r fileName
 
 				if [ -f $fileName ] || [ -d $fileName ]
 				then
@@ -412,7 +415,7 @@ function input_7 {
 			do
 				git branch -l
 				echo -ne "Enter the branch name to pull from or [r]eturn: "
-				read -r branchName
+				read -ei "" -p "| " -r branchName
 
 				if [[ $branchName == 'r' || $branchName == 'R' ]]
 				then
@@ -707,7 +710,7 @@ function input_12 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mEnter name where repo resides: \033[0m"
-			read -r  DIRECTORY
+			read -ei "" -p "| " -r DIRECTORY
 			clear
 
 			if [[ $DIRECTORY != 'R' && $DIRECTORY != 'r' ]]
@@ -764,7 +767,7 @@ function input_13 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mEnter file name:\033[0m "
-			read -r  name
+			read -ei "" -p "| " -r name
 			clear
 
 			if [[ $name != 'R' && $name != 'r' ]]
@@ -855,7 +858,7 @@ function input_18 {
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
 			echo -ne "\033[4A\r| \033[36;1;82mEnter name of file/folder: \033[0m"
-			read -r  fileName
+			read -ei "" -p "| " -r fileName
 
 			if [ -f $fileName ] || [ -d $fileName ]
 			then
@@ -918,9 +921,9 @@ function input_19 {
 		if (git branch -l)
 		then
 			echo -ne "Enter name of branch to merge from: "
-			read -r  branchName1
+			read -ei "" -p "| " -r branchName1
 			echo -ne "Enter name of branch to merge to: "
-			read -r  branchName2
+			read -ei "" -p "| " -r branchName2
 			clear
 
 			if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1) 
@@ -950,9 +953,9 @@ function input_20 {
 			if (git branch -l)
 			then
 				echo -ne "Enter branch name to delete: "
-				read -r  branchName1
+				read -ei "" -p "| " -r branchName1
 				echo -ne "Enter branch name to checkout: "
-				read -r branchName2
+				read -ei "" -p "| " -r branchName2
 				clear
 
 				if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1)
@@ -991,6 +994,3 @@ function error {
 }
 
 main
-
-
-
