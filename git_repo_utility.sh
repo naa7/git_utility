@@ -953,14 +953,14 @@ function input_20 {
 			if (git branch -l)
 			then
 				echo -ne "Enter branch name to delete: "
-				read -ei "" -p "| " -r branchName1
+				read -r branchName1
 				echo -ne "Enter branch name to checkout: "
-				read -ei "" -p "| " -r branchName2
+				read -r branchName2
 				clear
 
 				if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1)
 				then
-					if ((git checkout $branchName2 && git branch -d $branchName1 && git push origin --delete $branchName1) >/dev/null 2>&1) 
+					if ((git checkout $branchName2 && git branch -D $branchName1 && git push origin --delete $branchName1) >/dev/null 2>&1) 
 					then
 						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 					else
@@ -981,16 +981,13 @@ function input_20 {
 }
 
 function quit {
-
 			echo -e "\033[30;42;5;82m--- Good Bye ---\033[0m" && sleep 1 && clear
 
 }
 
 function error {
-
 			echo -e "\033[30;41;2;82m--- Error, Entry not recognized! ---\033[0m"&& sleep 1.5 && clear
 			return
-
 }
 
 main
