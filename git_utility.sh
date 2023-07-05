@@ -128,7 +128,7 @@ function main {
 function interface {
 
 			echo "+=========================================================+"
-			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                    |"
+			echo -e "|                     \033[32;1;82mGit Utility\033[0m                         |"
 			echo "+=========================================================+"
 			echo -e "| \033[36;1;82mOptions:\033[0m                                                |"
 			echo "+---------------------------------------------------------+"
@@ -154,7 +154,7 @@ function interface {
 function interface_child_1 {
 
 			echo "+========================================================+"
-			echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+			echo -e "|                     \033[32;1;82mGit Utility\033[0m                        |"
 			echo "+========================================================+"
 			echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
 			echo "+--------------------------------------------------------+"
@@ -166,7 +166,7 @@ function interface_child_1 {
 function interface_child_2 {
 
 			echo "+========================================================+"
-			echo -e "|                   \033[32;1;82mGit Repo Utility\033[0m                     |"
+			echo -e "|                   \033[32;1;82mGit Utility\033[0m                          |"
 			echo "+========================================================+"
 			echo -e "| \033[36;1;82mDirectory list:\033[0m                                        |"
 			echo "+--------------------------------------------------------+"
@@ -226,10 +226,11 @@ function input_1 {
 				clear
 				interface_child_1
 				echo -e "| \033[36;1;82mEnter comment to commit changes:\033[0m                       |"
+				echo -e "|                                                        |"
 				echo "+========================================================+"
 				echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 				echo "+========================================================+"
-				echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
+				echo -ne "\033[5A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
 				read -r  comment && clear
 
 				if [[ $comment != 'R' && $comment != 'r' ]]
@@ -370,10 +371,11 @@ function input_6 {
 			clear
 			interface_child_1
 			echo -e "| \033[36;1;82mEnter comment to commit:\033[0m                               |"
+			echo -e "|                                                        |"
 			echo "+========================================================+"
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
-			echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit: \033[0m"
+			echo -ne "\033[5A\r| \033[36;1;82mEnter comment to commit: \033[0m"
 			read comment && clear
 
 			if [[ $comment != 'R' && $comment != 'r' ]]
@@ -875,10 +877,11 @@ function input_18 {
 			clear
 			interface_child_1
 			echo -e "| \033[36;1;82mEnter comment to commit:\033[0m                               |"
+			echo -e "|                                                        |"
 			echo "+========================================================+"
 			echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
 			echo "+========================================================+"
-			echo -ne "\033[4A\r| \033[36;1;82mEnter comment to commit: \033[0m"
+			echo -ne "\033[5A\r| \033[36;1;82mEnter comment to commit: \033[0m"
 			read -r  comment && clear
 
 			if [[ $comment != 'R' && $comment != 'r' ]]
