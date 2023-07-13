@@ -109,6 +109,11 @@ function main {
 				elif [[ $input == 20 ]]
 				then
 					input_20
+					
+				#21 Create branch
+				elif [[ $input == 21 ]]
+				then
+					input_21
 
 				# Quit
 				elif [[ $input == 'Q' || $input == 'q' ]]
@@ -142,6 +147,7 @@ function interface {
 			echo -e "| \033[33;1;82m[15] Remote status [16] Show changes since last commit\033[0m  |"
 			echo -e "| \033[33;1;82m[17] Local status  [18] Remove a file/folder from remote\033[0m|"
 			echo -e "| \033[33;1;82m[19] Merge branch  [20] Delete local & remote branch\033[0m    |"
+			echo -e "| \033[33;1;82m[21] Create branch\033[0m                                      |"
 			echo "+---------------------------------------------------------+"
 			echo -e "| \033[36;1;82mEnter Nubmer:\033[0m                                           |"
 			echo "+=========================================================+"
@@ -929,10 +935,10 @@ function input_19 {
 			read -ei "" -p "| " -r branchName2
 			clear
 
-			if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1) 
+			if (git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1
 			then
-				if ((git checkout $branchName2 && git pull && git checkout $branchName1 && git pull && git rebase -i $branchName2 && 
-						git checkout $branchName2 && git merge $branchName1 && git push origin $branchName1) >/dev/null 2>&1) 
+				if (git checkout $branchName2 && git pull && git checkout $branchName1 && git pull && git rebase -i $branchName2 && 
+						git checkout $branchName2 && git merge $branchName1 && git push origin $branchName1) >/dev/null 2>&1
 				then
 					echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 				else
@@ -952,33 +958,87 @@ function input_19 {
 
 function input_20 {
 	if (git fetch --all >/dev/null 2>&1) 
+	then
+		if (git branch -l)
 		then
-			if (git branch -l)
-			then
-				echo -ne "Enter branch name to delete: "
-				read -r branchName1
-				echo -ne "Enter branch name to checkout: "
-				read -r branchName2
-				clear
+			echo -ne "Enter branch name to delete: "
+			read -r branchName1
+			clear
 
-				if ((git show-ref --quiet --verify refs/heads/$branchName1 && git show-ref --quiet --verify refs/heads/$branchName2) >/dev/null 2>&1)
+			if (git show-ref --quiet --verify refs/heads/$branchName1) >/dev/null 2>&1
+			then
+				if [ "$(git symbolic-ref --short HEAD)" == "$branchName1" ]
 				then
-					if ((git checkout $branchName2 && git branch -D $branchName1 && git push origin --delete $branchName1) >/dev/null 2>&1) 
+					echo -ne "Current branch is $branchName1. Enter branch name to switch to: "
+					read -r branchName2
+					clear
+
+					if (git branch -D $branchName1 >/dev/null 2>&1) && (git push origin --delete $branchName1 >/dev/null 2>&1)
+					then
+						if (git checkout $branchName2 >/dev/null 2>&1)
+						then
+							echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+						else
+							clear
+							echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+						fi
+					else
+						clear
+						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+					fi
+				else
+					if (git branch -D $branchName1 >/dev/null 2>&1) && (git push origin --delete $branchName1 >/dev/null 2>&1)
 					then
 						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 					else
 						clear
 						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 					fi
-				elif [[ $branchName1 != 'R' && $branchName1 != 'r' && $branchName2 != 'R' && $branchName2 != 'r' ]]
-				then
-					clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
-				else
-					clear && return
 				fi
+			elif [[ $branchName1 != 'R' && $branchName1 != 'r' ]]
+			then
+				clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
 			else
-        		clear && echo -e "\033[30;41;2;82m--- Error: No branches found ---\033[0m" && sleep 1.5 && clear
-    		fi
+				clear && return
+			fi
+		else
+			clear && echo -e "\033[30;41;2;82m--- Error: No branches found ---\033[0m" && sleep 1.5 && clear
+		fi
+	fi
+	sleep 1 && clear
+}
+
+function input_21 {
+	if (git fetch --all >/dev/null 2>&1) 
+	then
+		echo -ne "Enter branch name: "
+		read -r branchName
+		echo -ne "Do you want to switch to branch (y/n/[r]eturn): "
+		read -r option
+		if [[ $option == 'y' || $option == 'Y' ]]
+		then
+			if (git checkout -b $branchName >/dev/null 2>&1)
+			then
+				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+			else
+				clear
+				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			fi
+		elif [[ $option == 'n' || $option == 'N' ]]
+		then
+			if (git branch $branchName >/dev/null 2>&1)
+			then
+				echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+			else
+				clear
+				echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+			fi
+		elif [[ $option == 'r' || $option == 'R' ]]
+		then
+			clear && return
+		else
+			clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
+		fi
 	fi
 	sleep 1 && clear
 }
