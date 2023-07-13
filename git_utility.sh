@@ -1015,6 +1015,7 @@ function input_21 {
 		read -r branchName
 		echo -ne "Do you want to switch to branch (y/n/[r]eturn): "
 		read -r option
+		clear
 		if [[ $option == 'y' || $option == 'Y' ]]
 		then
 			if (git checkout -b $branchName >/dev/null 2>&1)
