@@ -973,21 +973,15 @@ function input_20 {
 					read -r branchName2
 					clear
 
-					if (git branch -D $branchName1 >/dev/null 2>&1) && (git push origin --delete $branchName1 >/dev/null 2>&1)
+					if (git checkout $branchName2 >/dev/null 2>&1) && (git branch -D $branchName1 >/dev/null 2>&1) && (git push origin --delete $branchName1 >/dev/null 2>&1 || true)
 					then
-						if (git checkout $branchName2 >/dev/null 2>&1)
-						then
-							echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-						else
-							clear
-							echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-						fi
+						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 					else
 						clear
 						echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
 					fi
 				else
-					if (git branch -D $branchName1 >/dev/null 2>&1) && (git push origin --delete $branchName1 >/dev/null 2>&1)
+					if (git branch -D $branchName1 >/dev/null 2>&1) && (git push origin --delete $branchName1 >/dev/null 2>&1 || true)
 					then
 						echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
 					else
