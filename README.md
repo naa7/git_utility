@@ -17,14 +17,14 @@ local and remote files, more features are being added. Therefore, it is mainly t
 
 ## Optional
 
-For easier and frequent use of `git_utility` without the need to navigate to its directory to run the file,
+For easier and frequent use of `git_utility` without the need to navigate everytime to its directory to run the file,
 
-copy `git_utility.sh` file to `/usr/bin/` folder:
+change name of `git_utility.sh` to `gitt` and copy file to `/usr/bin/` folder:
 
     $ mv git_utility.sh gitt
 
     $ sudo cp gitt /usr/bin/
 
-Now, you can either open it from terminal
+Now, you can open it from anywhere on your terminal using `gitt`
 
     $ gitt
