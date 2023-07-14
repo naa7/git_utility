@@ -4,8 +4,7 @@
 
 <img src="https://github.com/naa7/git_utility/blob/main/git_utility_walkThrough.gif"></br>
 
-The idea of this project is to make a git utility to automate the process of pushing, pulling, restoring files from and to repository. Also, to display repository logs and display differences between
-local and remote files, more features are being added. Therefore, it is mainly to simplify working with git and save time. It is helpful for both experienced and new users.
+Git Utility is a powerful program specifically designed to simplify and automate common Git operations. By providing a user-friendly interface, it enables users to streamline their Git workflows without the need for manual command entry. With Git Utility, users are presented with a menu of options that correspond to frequently performed Git tasks. By selecting the desired option from the menu, users can effortlessly execute the necessary Git commands without the hassle of remembering complex syntax or typing them out manually. This automation of common Git operations saves valuable time and reduces the risk of errors. It also makes Git more accessible to individuals who may be new to version control or prefer a visual interface over the command line. With Git Utility, users can focus more on their work and less on the mechanics of executing Git commands, resulting in a more efficient and enjoyable version control experience.
 
 ## To run the program:
 
