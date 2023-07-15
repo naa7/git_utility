@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function main {
-    while true; 
-	do
+    while true;
+    do
         # Display interface
         interface
         
@@ -13,74 +13,74 @@ function main {
         case $input in
             1)
                 input_1
-                ;;
+            ;;
             2)
                 input_2
-                ;;
+            ;;
             3)
                 input_3
-                ;;
+            ;;
             4)
                 input_4
-                ;;
+            ;;
             5)
                 input_5
-                ;;
+            ;;
             6)
                 input_6
-                ;;
+            ;;
             7)
                 input_7
-                ;;
+            ;;
             8)
                 input_8
-                ;;
+            ;;
             9)
                 input_9
-                ;;
+            ;;
             10)
                 input_10
-                ;;
+            ;;
             11)
                 input_11
-                ;;
+            ;;
             12)
                 input_12
-                ;;
+            ;;
             13)
                 input_13
-                ;;
+            ;;
             14)
                 input_14
-                ;;
+            ;;
             15)
                 input_15
-                ;;
+            ;;
             16)
                 input_16
-                ;;
+            ;;
             17)
                 input_17
-                ;;
+            ;;
             18)
                 input_18
-                ;;
+            ;;
             19)
                 input_19
-                ;;
+            ;;
             20)
                 input_20
-                ;;
+            ;;
             21)
                 input_21
-                ;;
+            ;;
             [qQ])
                 quit
                 break
-                ;;
+            ;;
             *)
                 error
-                ;;
+            ;;
         esac
     done
 }
@@ -136,24 +136,6 @@ function interface_child_2 {
     
 }
 
-function interface_option_20 {
-    echo "+=========================================================+"
-    echo -e "|            \033[32;1;82mDelete Local & Remote Branch\033[0m                |"
-    echo "+=========================================================+"
-    echo -e "| \033[36;1;82mAvailable Branches:\033[0m                                     |"
-    echo "+---------------------------------------------------------+"
-
-    # List branch names
-    git branch --list --format='| %-30(branchname:short) |' --color=always
-
-    echo "+---------------------------------------------------------+"
-    echo -e "| \033[36;1;82mEnter branch name to delete:\033[0m                             |"
-    echo "+=========================================================+"
-    echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
-    echo "+=========================================================+"
-    echo -ne "\033[7A\r| \033[36;1;82mEnter branch name to delete: \033[0m"
-}
-
 function input_1 {
     
     while [[ true ]]
@@ -181,11 +163,11 @@ function input_1 {
             echo "+========================================================+"
             echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
             read -ei "" -p "| " -r fileName
-
-			if [ -z "$fileName" ]
-			then
-				clear && echo -e "\033[30;41;2;82m--- Error, File name cannot be empty ---\033[0m" && sleep 1.5 && clear
-				return
+            
+            if [ -z "$fileName" ]
+            then
+                clear && echo -e "\033[30;41;2;82m--- Error, File name cannot be empty ---\033[0m" && sleep 1.5 && clear
+                return
             elif [ -f $fileName ] || [ -d $fileName ]
             then
                 #adding a file
@@ -214,14 +196,14 @@ function input_1 {
         echo "+========================================================+"
         echo -ne "\033[5A\r| \033[36;1;82mEnter comment to commit changes: \033[0m"
         read -r comment && clear
-
-		if [ -z "$comment" ]
-		then
-			if git reset . || git restore --staged .
-			then
-				clear && echo -e "\033[30;41;2;82m--- Error, Commit message cannot be empty ---\033[0m" && sleep 1.5 && clear
-				return
-			fi
+        
+        if [ -z "$comment" ]
+        then
+            if git reset . || git restore --staged .
+            then
+                clear && echo -e "\033[30;41;2;82m--- Error, Commit message cannot be empty ---\033[0m" && sleep 1.5 && clear
+                return
+            fi
         elif [[ $comment != 'R' && $comment != 'r' ]]
         then
             
@@ -246,12 +228,12 @@ function input_1 {
 
 function input_2 {
     echo "+=========================================================+"
-	echo -e "|                  \033[32;1;82mReset to Previous Commit\033[0m               |"
+    echo -e "|                  \033[32;1;82mReset to Previous Commit\033[0m               |"
     echo "+=========================================================+"
     echo -e "| \033[36;1;82mLast 10 Commits:\033[0m                                        |"
     echo "+---------------------------------------------------------+"
-	echo -e "|  \033[36;1;82mHash\033[0m   |  \033[36;1;82mMessage\033[0m                                      |"
-	echo "+---------------------------------------------------------+"
+    echo -e "|  \033[36;1;82mHash\033[0m   |  \033[36;1;82mMessage\033[0m                                      |"
+    echo "+---------------------------------------------------------+"
     git log --pretty=format:"| %h | %s" -10
     echo "+---------------------------------------------------------+"
     echo -e "| \033[36;1;82mEnter the commit hash to reset to:\033[0m                      |"
@@ -268,8 +250,8 @@ function input_2 {
         else
             clear && echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
         fi
-	else
-		clear && return
+    else
+        clear && return
     fi
     
     sleep 1 && clear
@@ -380,11 +362,11 @@ function input_6 {
     
     if [ -z "$comment" ]
     then
-		if git reset . || git restore --staged .
-		then
-			clear && echo -e "\033[30;41;2;82m--- Error, Commit message cannot be empty ---\033[0m" && sleep 1.5 && clear
-			return
-		fi
+        if git reset . || git restore --staged .
+        then
+            clear && echo -e "\033[30;41;2;82m--- Error, Commit message cannot be empty ---\033[0m" && sleep 1.5 && clear
+            return
+        fi
     elif [[ $comment != 'R' && $comment != 'r' ]]
     then
         # committing changes
@@ -910,7 +892,7 @@ function input_18 {
         else
             echo "\033[30;41;2;82m--- Error! ---\033[0m" && sleep 1 && clear
         fi
-    fi    
+    fi
 }
 
 function input_19 {
@@ -927,12 +909,12 @@ function input_19 {
     echo "+=========================================================+"
     echo -ne "\033[4A\r| \033[36;1;82mEnter name of branch to merge from: \033[0m"
     read -ei "" -p "| " -r branchName1
-
+    
     if [[ $branchName1 != 'R' && $branchName1 != 'r' ]]; then
         echo -ne "\033[1A\033[K\r| \033[36;1;82mEnter name of branch to merge to: \033[0m"
         read -ei "" -p "| " -r branchName2
         clear
-
+        
         if [[ $branchName2 != 'R' && $branchName2 != 'r' ]]; then
             if git fetch --all >/dev/null 2>&1 && git show-ref --quiet --verify "refs/heads/$branchName1" >/dev/null 2>&1 && git show-ref --quiet --verify "refs/heads/$branchName2" >/dev/null 2>&1; then
                 if git checkout "$branchName2" && git pull && git checkout "$branchName1" && git pull && git rebase -i "$branchName2" && git checkout "$branchName2" && git merge "$branchName1" && git push origin "$branchName1" >/dev/null 2>&1; then
@@ -950,7 +932,7 @@ function input_19 {
     else
         clear && return
     fi
-
+    
     sleep 1 && clear
 }
 
@@ -968,7 +950,7 @@ function input_20 {
     echo "+=========================================================+"
     echo -ne "\033[4A\r| \033[36;1;82mEnter branch name to delete: \033[0m"
     read -r branchName1
-
+    
     if [[ $branchName1 != 'R' && $branchName1 != 'r' ]]; then
         if git fetch --all >/dev/null 2>&1; then
             if git show-ref --quiet --verify "refs/heads/$branchName1" >/dev/null 2>&1; then
@@ -978,9 +960,9 @@ function input_20 {
                 if [[ -z "$branchName2" ]]; then
                     clear && echo -e "\033[30;41;2;82m--- Error, branch name cannot be empty ---\033[0m" && sleep 1.5 && clear
                     return
-                elif [[ $branchName2 == 'R' || $branchName2 == 'r' ]]; then
+                    elif [[ $branchName2 == 'R' || $branchName2 == 'r' ]]; then
                     clear && return
-                elif git show-ref --quiet --verify "refs/heads/$branchName2" >/dev/null 2>&1; then
+                    elif git show-ref --quiet --verify "refs/heads/$branchName2" >/dev/null 2>&1; then
                     if git checkout "$branchName2" >/dev/null 2>&1 && git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
                         echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
                     else
@@ -991,7 +973,7 @@ function input_20 {
                     clear && echo -e "\033[30;41;2;82m--- Error, branch '$branchName2' does not exist ---\033[0m" && sleep 1.5 && clear
                     return
                 fi
-            elif git show-ref --quiet --verify "refs/heads/$branchName1" >/dev/null 2>&1; then
+                elif git show-ref --quiet --verify "refs/heads/$branchName1" >/dev/null 2>&1; then
                 if git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
                     echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
                 else
@@ -1009,7 +991,7 @@ function input_20 {
     else
         clear && return
     fi
-
+    
     sleep 1 && clear
 }
 
@@ -1018,19 +1000,19 @@ function input_21 {
     echo -e "|                      \033[32;1;82mCreate Branch\033[0m                      |"
     echo "+=========================================================+"
     echo -e "| \033[36;1;82mEnter new branch name: \033[0m                                 |"
-	echo "+=========================================================+"
+    echo "+=========================================================+"
     echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
     echo "+=========================================================+"
     echo -ne "\033[4A\r| \033[36;1;82mEnter new branch name: \033[0m"
     read -r branchName
-	if [[ $branchName == 'r' || $branchName == 'R' ]]; then
+    if [[ $branchName == 'r' || $branchName == 'R' ]]; then
         clear && return
-	fi 
+    fi
     echo "+=========================================================+"
     echo -ne "\033[2A\033[K\r| \033[36;1;82mDo you want to switch to branch (y/n): \033[0m"
     read -r option
     clear
-
+    
     if [[ $option == 'y' || $option == 'Y' ]]; then
         if git fetch --all >/dev/null 2>&1 && git checkout -b "$branchName" >/dev/null 2>&1; then
             echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
@@ -1038,19 +1020,19 @@ function input_21 {
             clear
             echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
         fi
-    elif [[ $option == 'n' || $option == 'N' ]]; then
+        elif [[ $option == 'n' || $option == 'N' ]]; then
         if git fetch --all >/dev/null 2>&1 && git branch "$branchName" >/dev/null 2>&1; then
             echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
         else
             clear
             echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
         fi
-    elif [[ $option == 'r' || $option == 'R' ]]; then
+        elif [[ $option == 'r' || $option == 'R' ]]; then
         clear && return
     else
         clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
     fi
-
+    
     sleep 1 && clear
 }
 
