@@ -954,31 +954,34 @@ function input_20 {
     if [[ $branchName1 != 'R' && $branchName1 != 'r' ]]; then
         if git fetch --all >/dev/null 2>&1; then
             if git show-ref --quiet --verify "refs/heads/$branchName1" >/dev/null 2>&1; then
-                echo -ne "\033[A\033[K\r| \033[36;1;82mEnter branch name to switch to: \033[0m"
-                read -r branchName2
-                clear
-                if [[ -z "$branchName2" ]]; then
-                    clear && echo -e "\033[30;41;2;82m--- Error, branch name cannot be empty ---\033[0m" && sleep 1.5 && clear
-                    return
+                if [[ "$(git symbolic-ref --short HEAD)" == "$branchName1" ]]; then
+                    echo -ne "\033[A\033[K\r| \033[36;1;82mEnter branch name to switch to: \033[0m"
+                    read -r branchName2
+                    clear
+                    if [[ -z "$branchName2" ]]; then
+                        clear && echo -e "\033[30;41;2;82m--- Error, branch name cannot be empty ---\033[0m" && sleep 1.5 && clear
+                        return
                     elif [[ $branchName2 == 'R' || $branchName2 == 'r' ]]; then
-                    clear && return
+                        clear && return
                     elif git show-ref --quiet --verify "refs/heads/$branchName2" >/dev/null 2>&1; then
-                    if git checkout "$branchName2" >/dev/null 2>&1 && git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
+                        if git checkout "$branchName2" >/dev/null 2>&1 && git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
+                            echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+                        else
+                            clear
+                            echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+                        fi
+                    else
+                        clear && echo -e "\033[30;41;2;82m--- Error, branch '$branchName2' does not exist ---\033[0m" && sleep 1.5 && clear
+                        return
+                    fi
+                else
+                    if git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
+                        clear
                         echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
                     else
                         clear
                         echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
                     fi
-                else
-                    clear && echo -e "\033[30;41;2;82m--- Error, branch '$branchName2' does not exist ---\033[0m" && sleep 1.5 && clear
-                    return
-                fi
-                elif git show-ref --quiet --verify "refs/heads/$branchName1" >/dev/null 2>&1; then
-                if git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
-                    echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-                else
-                    clear
-                    echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
                 fi
             else
                 clear && echo -e "\033[30;41;2;82m--- Error, branch '$branchName1' does not exist ---\033[0m" && sleep 1.5 && clear
@@ -994,6 +997,7 @@ function input_20 {
     
     sleep 1 && clear
 }
+
 
 function input_21 {
     echo "+=========================================================+"
