@@ -1018,7 +1018,7 @@ function input_21 {
     clear
     
     if [[ $option == 'y' || $option == 'Y' ]]; then
-        if git fetch --all >/dev/null 2>&1 && git checkout -b "$branchName" >/dev/null 2>&1; then
+        if git fetch --all >/dev/null 2>&1 && git stash && git checkout -b "$branchName" && git stash apply && git stash drop >/dev/null 2>&1; then
             echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
         else
             clear
