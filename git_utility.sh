@@ -74,6 +74,9 @@ function main {
             21)
                 input_21
             ;;
+            22)
+                input_22
+            ;;
             [qQ])
                 quit
                 break
@@ -102,7 +105,7 @@ function interface {
     echo -e "| \033[33;1;82m[15] Remote status [16] Show changes since last commit\033[0m  |"
     echo -e "| \033[33;1;82m[17] Local status  [18] Remove a file/folder from remote\033[0m|"
     echo -e "| \033[33;1;82m[19] Merge branch  [20] Delete local & remote branch\033[0m    |"
-    echo -e "| \033[33;1;82m[21] Create branch\033[0m                                      |"
+    echo -e "| \033[33;1;82m[21] Create branch [22] Switch between branches\033[0m         |"
     echo "+---------------------------------------------------------+"
     echo -e "| \033[36;1;82mEnter Choice Nubmer:\033[0m                                    |"
     echo "+=========================================================+"
@@ -1038,6 +1041,51 @@ function input_21 {
     fi
     
     sleep 1 && clear
+}
+
+function input_22 {
+    echo "+=========================================================+"
+    echo -e "|                  \033[32;1;82mSwitch between branch\033[0m                  |"
+    echo "+=========================================================+"
+    echo -e "| \033[36;1;82mAvailable Branches:\033[0m                                     |"
+    echo "+---------------------------------------------------------+"
+    git branch -l
+    echo "+---------------------------------------------------------+"
+    echo -e "| \033[36;1;82mEnter branch name to switch to:\033[0m                         |"
+    echo "+=========================================================+"
+    echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
+    echo "+=========================================================+"
+    echo -ne "\033[4A\r| \033[36;1;82mEnter branch name to switch to: \033[0m"
+    read -r branchName
+    
+    if [[ "$branchName" != 'r' && "$branchName" != 'R' ]]; then
+        if git fetch --all >/dev/null 2>&1; then
+            if git show-ref --quiet --verify "refs/heads/$branchName" >/dev/null 2>&1; then
+                if git stash >/dev/null 2>&1 && git checkout "$branchName" >/dev/null 2>&1 && git stash apply >/dev/null 2>&1 && git stash drop >/dev/null 2>&1; then
+                    clear
+                    echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+                else
+                    clear
+                    echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+                fi
+            else
+                clear
+                echo -e "\033[30;41;2;82m--- Error: Branch does not exist ---\033[0m"
+            fi
+        else
+            clear
+            echo -e "\033[30;41;2;82m--- Error: Unable to fetch branches ---\033[0m"
+        fi
+    elif [[ "$branchName" == 'r' || "$branchName" == 'R' ]]; then
+        clear
+        return
+    else
+        clear
+        echo -e "\033[30;41;2;82m--- Error: Entry not recognized ---\033[0m"
+    fi
+    
+    sleep 1
+    clear
 }
 
 function quit {
