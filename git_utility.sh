@@ -323,7 +323,6 @@ function input_6 {
     
     if [[ $fileOption == 'A' || $fileOption == 'a' ]] && [[ $comment != 'R' || $comment != 'r' ]]
     then
-        # adding files
         git add . >/dev/null 2>&1
     elif [[ $fileOption == 'S' || $fileOption == 's' ]] && [[ $comment != 'R' || $comment != 'r' ]]
     then
@@ -333,7 +332,7 @@ function input_6 {
         echo -e "|                   \033[31;1;82mEnter [r] to Return\033[0m                  |"
         echo "+========================================================+"
         echo -ne "\033[4A\r| \033[36;1;82mEnter name of file: \033[0m"
-        read -e -r fileName
+        read -ei "" -p "| " -r fileName
         
         if [ -z "$fileName" ]
         then
@@ -341,7 +340,6 @@ function input_6 {
             return
         elif [ -f "$fileName" ] || [ -d "$fileName" ]
         then
-            # adding a file
             git add "$fileName" >/dev/null 2>&1
         else
             clear && return
@@ -372,10 +370,7 @@ function input_6 {
         fi
     elif [[ $comment != 'R' && $comment != 'r' ]]
     then
-        # committing changes
         git commit -m "$comment" >/dev/null 2>&1
-        
-        # pushing to repository
         while true
         do
             echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
@@ -831,7 +826,7 @@ function input_17 {
 function input_18 {
     
     echo "+========================================================+"
-    echo -e "|                     \033[32;1;82mGit Repo Utility\033[0m                   |"
+    echo -e "|             \033[32;1;82mRemove file/folder from remote\033[0m             |"
     echo "+========================================================+"
     echo -e "| \033[36;1;82mFiles list:\033[0m                                            |"
     echo "+--------------------------------------------------------+"
@@ -846,7 +841,6 @@ function input_18 {
     
     if [ -f $fileName ] || [ -d $fileName ]
     then
-        #removing file/folder
         git rm -r --cached $fileName >/dev/null 2>&1
         
     elif [[ $fileName != 'R' && $fileName != 'r' ]]
@@ -868,12 +862,7 @@ function input_18 {
     
     if [[ $comment != 'R' && $comment != 'r' ]]
     then
-        
-        # commiting changes
         git commit -m "$comment" >/dev/null 2>&1
-        
-        
-        # pushing to repository
         while [[ true ]]
         do
             echo -ne "\033[33;1;82mPlease, wait...\033[0m\033[K\r"
@@ -911,11 +900,11 @@ function input_19 {
     echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
     echo "+=========================================================+"
     echo -ne "\033[4A\r| \033[36;1;82mEnter name of branch to merge from: \033[0m"
-    read -ei "" -p "| " -r branchName1
+    read -r branchName1
     
     if [[ $branchName1 != 'R' && $branchName1 != 'r' ]]; then
         echo -ne "\033[1A\033[K\r| \033[36;1;82mEnter name of branch to merge to: \033[0m"
-        read -ei "" -p "| " -r branchName2
+        read -r branchName2
         clear
         
         if [[ $branchName2 != 'R' && $branchName2 != 'r' ]]; then
@@ -940,31 +929,32 @@ function input_19 {
 }
 
 function input_20 {
-    echo "+=========================================================+"
-    echo -e "|               \033[32;1;82mDelete Local & Remote Branch\033[0m              |"
-    echo "+=========================================================+"
-    echo -e "| \033[36;1;82mAvailable Branches:\033[0m                                     |"
-    echo "+---------------------------------------------------------+"
-    git branch -l
-    echo "+---------------------------------------------------------+"
-    echo -e "| \033[36;1;82mEnter branch name to delete:\033[0m                            |"
-    echo "+=========================================================+"
-    echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
-    echo "+=========================================================+"
-    echo -ne "\033[4A\r| \033[36;1;82mEnter branch name to delete: \033[0m"
-    read -r branchName1
-    
-    if [[ $branchName1 != 'R' && $branchName1 != 'r' ]]; then
-        if git fetch --all >/dev/null 2>&1; then
-            if git show-ref --quiet --verify "refs/heads/$branchName1" >/dev/null 2>&1; then
-                if [[ "$(git symbolic-ref --short HEAD)" == "$branchName1" ]]; then
+    while true; do
+        echo "+=========================================================+"
+        echo -e "|               \033[32;1;82mDelete Local & Remote Branch\033[0m              |"
+        echo "+=========================================================+"
+        echo -e "| \033[36;1;82mAvailable Branches:\033[0m                                     |"
+        echo "+---------------------------------------------------------+"
+        git branch -l
+        echo "+---------------------------------------------------------+"
+        echo -e "| \033[36;1;82mEnter branch name to delete:\033[0m                            |"
+        echo "+=========================================================+"
+        echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
+        echo "+=========================================================+"
+        echo -ne "\033[4A\r| \033[36;1;82mEnter branch name to delete: \033[0m"
+        read -r branchName1
+        
+        if [[ $branchName1 == 'R' || $branchName1 == 'r' ]]; then
+            clear && return
+        elif [[ -z "$branchName1" ]]; then
+            clear && echo -e "\033[30;41;2;82m--- Error, branch name cannot be empty ---\033[0m" && sleep 1.5 && clear
+        elif git fetch --all >/dev/null 2>&1 && git show-ref --quiet --verify "refs/heads/$branchName1" >/dev/null 2>&1; then
+            if [[ "$(git symbolic-ref --short HEAD)" == "$branchName1" ]]; then
+                while true; do
                     echo -ne "\033[A\033[K\r| \033[36;1;82mEnter branch name to switch to: \033[0m"
-                    read -r branchName2
+                     read -r branchName2
                     clear
-                    if [[ -z "$branchName2" ]]; then
-                        clear && echo -e "\033[30;41;2;82m--- Error, branch name cannot be empty ---\033[0m" && sleep 1.5 && clear
-                        return
-                    elif [[ $branchName2 == 'R' || $branchName2 == 'r' ]]; then
+                    if [[ $branchName2 == 'R' || $branchName2 == 'r' ]]; then
                         clear && return
                     elif git show-ref --quiet --verify "refs/heads/$branchName2" >/dev/null 2>&1; then
                         if git checkout "$branchName2" >/dev/null 2>&1 && git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
@@ -973,117 +963,169 @@ function input_20 {
                             clear
                             echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
                         fi
+                        break
                     else
                         clear && echo -e "\033[30;41;2;82m--- Error, branch '$branchName2' does not exist ---\033[0m" && sleep 1.5 && clear
-                        return
                     fi
-                else
-                    if git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
-                        clear
-                        echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-                    else
-                        clear
-                        echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-                    fi
-                fi
+                done
             else
-                clear && echo -e "\033[30;41;2;82m--- Error, branch '$branchName1' does not exist ---\033[0m" && sleep 1.5 && clear
-                return
-            fi
-        else
-            clear && echo -e "\033[30;41;2;82m--- Error: Failed to fetch branches ---\033[0m" && sleep 1.5 && clear
-            return
-        fi
-    else
-        clear && return
-    fi
-    
-    sleep 1 && clear
-}
-
-
-function input_21 {
-    echo "+=========================================================+"
-    echo -e "|                      \033[32;1;82mCreate Branch\033[0m                      |"
-    echo "+=========================================================+"
-    echo -e "| \033[36;1;82mEnter new branch name: \033[0m                                 |"
-    echo "+=========================================================+"
-    echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
-    echo "+=========================================================+"
-    echo -ne "\033[4A\r| \033[36;1;82mEnter new branch name: \033[0m"
-    read -r branchName
-    if [[ $branchName == 'r' || $branchName == 'R' ]]; then
-        clear && return
-    fi
-    echo "+=========================================================+"
-    echo -ne "\033[2A\033[K\r| \033[36;1;82mDo you want to switch to branch (y/n): \033[0m"
-    read -r option
-    clear
-    
-    if [[ $option == 'y' || $option == 'Y' ]]; then
-        if git fetch --all >/dev/null 2>&1 && git stash >/dev/null 2>&1 && git checkout -b "$branchName" >/dev/null 2>&1 && git stash apply >/dev/null 2>&1 && git stash drop >/dev/null 2>&1; then
-            echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-        else
-            clear
-            echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-        fi
-        elif [[ $option == 'n' || $option == 'N' ]]; then
-        if git fetch --all >/dev/null 2>&1 && git branch "$branchName" >/dev/null 2>&1; then
-            echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
-        else
-            clear
-            echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
-        fi
-        elif [[ $option == 'r' || $option == 'R' ]]; then
-        clear && return
-    else
-        clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
-    fi
-    
-    sleep 1 && clear
-}
-
-function input_22 {
-    echo "+=========================================================+"
-    echo -e "|                  \033[32;1;82mSwitch between branch\033[0m                  |"
-    echo "+=========================================================+"
-    echo -e "| \033[36;1;82mAvailable Branches:\033[0m                                     |"
-    echo "+---------------------------------------------------------+"
-    git branch -l
-    echo "+---------------------------------------------------------+"
-    echo -e "| \033[36;1;82mEnter branch name to switch to:\033[0m                         |"
-    echo "+=========================================================+"
-    echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
-    echo "+=========================================================+"
-    echo -ne "\033[4A\r| \033[36;1;82mEnter branch name to switch to: \033[0m"
-    read -r branchName
-    
-    if [[ "$branchName" != 'r' && "$branchName" != 'R' ]]; then
-        if git fetch --all >/dev/null 2>&1; then
-            if git show-ref --quiet --verify "refs/heads/$branchName" >/dev/null 2>&1; then
-                if git stash >/dev/null 2>&1 && git checkout "$branchName" >/dev/null 2>&1 && git stash apply >/dev/null 2>&1 && git stash drop >/dev/null 2>&1; then
+                if git branch -D "$branchName1" >/dev/null 2>&1 && git push origin --delete "$branchName1" >/dev/null 2>&1 || true; then
                     clear
                     echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
                 else
                     clear
                     echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
                 fi
+            fi
+            break
+        else
+            clear && echo -e "\033[30;41;2;82m--- Error, branch '$branchName1' does not exist ---\033[0m" && sleep 1.5 && clear
+        fi
+    done
+    
+    sleep 1 && clear
+}
+
+
+
+function input_21 {
+    while true; do
+        echo "+=========================================================+"
+        echo -e "|                      \033[32;1;82mCreate Branch\033[0m                      |"
+        echo "+=========================================================+"
+        echo -e "| \033[36;1;82mEnter new branch name: \033[0m                                 |"
+        echo "+=========================================================+"
+        echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
+        echo "+=========================================================+"
+        echo -ne "\033[4A\r| \033[36;1;82mEnter new branch name: \033[0m"
+        read -r branchName
+        if [[ $branchName == 'r' || $branchName == 'R' ]]; then
+            clear && return
+        fi
+        echo -e "\033[A\033[K\r| \033[36;1;82mDo you want to switch to branch?\033[0m                        |"
+        echo "+---------------------------------------------------------+"
+        echo -e "\033[K| Enter your choice (y/n):                                |"
+        echo "+=========================================================+"
+        echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
+        echo "+=========================================================+"
+        echo -ne "\033[4A\r| Enter your choice (y/n): "
+        read -r option
+
+        if [[ $option == 'y' || $option == 'Y' ]]; then
+            if git fetch --all >/dev/null 2>&1 && git stash >/dev/null 2>&1 && git checkout -b "$branchName" >/dev/null 2>&1 && git stash apply >/dev/null 2>&1; then
+                while true; do
+                    clear
+                    echo "+=========================================================+"
+                    echo -e "|                      \033[32;1;82mCreate Branch\033[0m                      |"
+                    echo "+=========================================================+"
+                    echo -e "|  \033[32;1;82mDo you want to drop the stash?\033[0m                         |"
+                    echo "+---------------------------------------------------------+"
+                    echo -e "| Enter your choice (y/n):                             |"
+                    echo "+---------------------------------------------------------+"
+                    echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
+                    echo "+=========================================================+"
+                    echo -ne "\033[4A\r| Enter your choice: "
+                    read -r choice
+                    if [[ "$choice" == 'y' || "$choice" == 'Y' ]]; then
+                        git stash drop >/dev/null 2>&1
+                        clear && echo -e "\033[30;48;5;82m--- Stash dropped successfully ---\033[0m" && sleep 1 && clear
+                        break
+                    elif [[ "$choice" == 'n' || "$choice" == 'N' ]]; then
+                        clear && echo -e "\033[30;48;5;82m--- Stash saved ---\033[0m" && sleep 1 && clear
+                        break
+                    elif [[ "$choice" == 'r' || "$choice" == 'R' ]]; then
+                        git stash drop >/dev/null 2>&1
+                        clear && return
+                    else
+                        clear && echo -e "\033[30;41;2;82m--- Invalid choice. Try again. ---\033[0m" && sleep 1 && clear
+                    fi
+                done
             else
                 clear
-                echo -e "\033[30;41;2;82m--- Error: Branch does not exist ---\033[0m"
+                echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
             fi
+            break
+        elif [[ $option == 'n' || $option == 'N' ]]; then
+            if git fetch --all >/dev/null 2>&1 && git branch "$branchName" >/dev/null 2>&1; then
+                clear
+                echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+            else
+                clear
+                echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+            fi
+            break
+        elif [[ $option == 'r' || $option == 'R' ]]; then
+            clear && return
+        else
+            clear && echo -e "\033[30;41;2;82m--- Error, Entry not recognized ---\033[0m" && sleep 1.5 && clear
+        fi
+    done
+
+    sleep 1 && clear
+}
+
+function input_22 {
+    while true; do
+        echo "+=========================================================+"
+        echo -e "|                  \033[32;1;82mSwitch between branches\033[0m                |"
+        echo "+=========================================================+"
+        echo -e "| \033[36;1;82mAvailable Branches:\033[0m                                     |"
+        echo "+---------------------------------------------------------+"
+        git branch -l
+        echo "+---------------------------------------------------------+"
+        echo -e "| \033[36;1;82mEnter branch name to switch to:\033[0m                         |"
+        echo "+=========================================================+"
+        echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
+        echo "+=========================================================+"
+        echo -ne "\033[4A\r| \033[36;1;82mEnter branch name to switch to: \033[0m"
+        read -r branchName
+
+        if [[ "$branchName" == 'r' || "$branchName" == 'R' ]]; then
+            clear && return
+        elif [[ -z "$branchName" ]]; then
+            clear && echo -e "\033[30;41;2;82m--- Error, branch name cannot be empty ---\033[0m" && sleep 1.5 && clear
+        elif git fetch --all >/dev/null 2>&1 && git show-ref --quiet --verify "refs/heads/$branchName" >/dev/null 2>&1; then
+            if git stash >/dev/null 2>&1 && git checkout "$branchName" >/dev/null 2>&1 && git stash apply >/dev/null 2>&1; then
+                clear
+                echo -e "\033[30;48;5;82m--- Successful ---\033[0m"
+                sleep 1 && clear
+                while true; do
+                    echo "+=========================================================+"
+                    echo -e "|                  \033[32;1;82mSwitch between branches\033[0m                |"
+                    echo "+=========================================================+"
+                    echo -e "| \033[32;1;82mDo you want to drop the stash?\033[0m                          |"
+                    echo "+---------------------------------------------------------+"
+                    echo "| Enter your choice (y/n):                                |"
+                    echo "+---------------------------------------------------------+"
+                    echo -e "|                    \033[31;1;82mEnter [r] to Return\033[0m                  |"
+                    echo "+=========================================================+"
+                    echo -ne "\033[4A\r| Enter your choice (y/n): "
+                    read -r choice
+                    if [[ "$choice" == 'y' || "$choice" == 'Y' ]]; then
+                        git stash drop >/dev/null 2>&1
+                        clear && echo -e "\033[30;48;5;82m--- Stash dropped successfully ---\033[0m" && sleep 1 && clear
+                        break
+                    elif [[ "$choice" == 'n' || "$choice" == 'N' ]]; then
+                        clear && echo -e "\033[30;48;5;82m--- Stash saved ---\033[0m" && sleep 1 && clear
+                        break
+                    elif [[ "$choice" == 'r' || "$choice" == 'R' ]]; then
+                        git stash drop >/dev/null 2>&1
+                        clear && return
+                    else
+                        clear && echo -e "\033[30;41;2;82m--- Invalid choice. Try again. ---\033[0m" && sleep 1 && clear
+                    fi
+                done
+            else
+                clear
+                echo -e "\033[30;41;5;82m--- Failed ---\033[0m"
+            fi
+            break
         else
             clear
-            echo -e "\033[30;41;2;82m--- Error: Unable to fetch branches ---\033[0m"
+            echo -e "\033[30;41;2;82m--- Error: Branch '$branchName' does not exist ---\033[0m" && sleep 1.5 && clear
         fi
-    elif [[ "$branchName" == 'r' || "$branchName" == 'R' ]]; then
-        clear
-        return
-    else
-        clear
-        echo -e "\033[30;41;2;82m--- Error: Entry not recognized ---\033[0m"
-    fi
-    
+    done
+
     sleep 1
     clear
 }
